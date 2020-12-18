@@ -1,8 +1,10 @@
 import axios from 'axios'
 import cheerio from 'cheerio'
 import express from 'express'
+import cors from 'cors'
 
 const app = express()
+app.use(cors())
 const port = 5000
 
 app.get('/title/:id', (req:express.Request, res:express.Response) => {
@@ -10,7 +12,7 @@ app.get('/title/:id', (req:express.Request, res:express.Response) => {
   axios.get(url).then(response => {
     try {
       const $ = cheerio.load(response.data)
-
+      console.log($("div").css("background-image"))
       const scripts:cheerio.Cheerio = $('script[type="application/ld+json"]')
       if(scripts.length === 0) {
         throw new Error("No scripts found")
