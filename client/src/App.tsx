@@ -1,8 +1,9 @@
-import React from 'react';
-import './App.css';
+import React from 'react'
+import Poster from 'Components/Poster/Poster'
+import './App.css'
 
 
-type TVSeriesType = {
+export type TVSeriesType = {
   "@context": string,
   "@type": string,
   actors: {
@@ -30,49 +31,73 @@ type TVSeriesType = {
 }
 
 interface State {
-  data?: TVSeriesType,
+  data: TVSeriesType[],
   errors: string[],
   status: string,
-  titleId: string,
+  titleIds: string,
 }
 
 class App extends React.Component<{},State> {
   state:State = {
+    data: [],
     errors: [],
     status: "",
-    titleId: "70136120",
+    titleIds: "81193309, 81243992, 81290293, 81045349, 81144925",
   }
 
-  onSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
+  componentDidMount() {
+    this.requestTitleData()
+  }
+
+  onSubmit = (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
+    this.requestTitleData()
+  }
+
+  requestTitleData = async () => {
     this.setState({
       errors: [],
       status: "loading",
     })
 
-    try {
-      const data:TVSeriesType = await fetch(`http://localhost:5000/title/${this.state.titleId}`).then(response => response.json())
-      console.log(data)
-      this.setState({
-        data,
-        status: "",
+    const ids = this.state.titleIds.split(",").map(id => id.trim())
+    const results = await Promise.all(
+      ids.map(async id => {
+        try {
+          const data:TVSeriesType = await fetch(`http://localhost:5000/title/${id}`).then(response => response.json())
+          return data
+        }
+        catch(err) {
+          console.error(err)
+          this.setState({
+            errors: [err.message],
+            status: "error",
+          })
+        }
       })
-    }
-    catch(err) {
-      console.error(err)
-      this.setState({
-        errors: [err.message],
-        status: "error",
-      })
-    }
+    )
+
+
+    const data:TVSeriesType[] = []
+    results.forEach(r => {
+      if(r) {
+        data.push(r)
+      }
+    })
+
+    console.log(data)
+    this.setState({
+      data,
+      status: "",
+    })
   }
 
   renderData = () => {
-    if(this.state.data) {
+    if(this.state.data.length > 0) {
       return (
         <div>
-          <img src={this.state.data.image} alt={`${this.state.data.name}`}/>
+          <Poster data={this.state.data}/>
         </div>
       )
     }
@@ -82,7 +107,8 @@ class App extends React.Component<{},State> {
     return (
       <div className="App">
         <form onSubmit={this.onSubmit}>
-          <input value={this.state.titleId} onChange={(e:React.ChangeEvent<HTMLInputElement>) => this.setState({titleId: e.target.value})}/>
+          <label>Title Ids (comma separated)</label>
+          <input value={this.state.titleIds} onChange={(e:React.ChangeEvent<HTMLInputElement>) => this.setState({titleIds: e.target.value})}/>
           <button type="submit">Submit</button>
 
           {this.state.errors.map((e,i) => <div key={i}>{e}</div>)}
