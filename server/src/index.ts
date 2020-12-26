@@ -12,7 +12,7 @@ app.get('/title/:id', (req:express.Request, res:express.Response) => {
   axios.get(url).then(response => {
     try {
       const $ = cheerio.load(response.data)
-      console.log($("div").css("background-image"))
+
       const scripts:cheerio.Cheerio = $('script[type="application/ld+json"]')
       if(scripts.length === 0) {
         throw new Error("No scripts found")

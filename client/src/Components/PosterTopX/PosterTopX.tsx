@@ -1,6 +1,6 @@
 import React from 'react'
 import { TVSeriesType } from "App"
-import "./poster.scss"
+import "./posterTopX.scss"
 
 type Props = {
   data: TVSeriesType[],
@@ -9,7 +9,7 @@ type Props = {
   width: number,
 }
 
-export default class Poster extends React.Component<Props,{}> {
+export default class PosterTopX extends React.Component<Props,{}> {
   public static defaultProps = {
     height: 2000,
     width: 1080,
