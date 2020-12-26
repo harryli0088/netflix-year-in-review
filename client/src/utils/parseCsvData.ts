@@ -13,7 +13,7 @@ export default function parseCsvData(data:string) {
       const rawRow = parsedData[i]
       // @ts-ignore
       rows.push({
-        Title: rawRow.Title,
+        Title: rawRow.,
         Date: new Date(rawRow.Date || new Date()),
       })
     }
