@@ -37,7 +37,7 @@ interface State {
   csvData: CsvDataType[],
   errors: string[],
   status: string,
-  topXShowData: TVSeriesType[],
+  topXData: TVSeriesType[],
   tvShowYearSortedMap: TopNodeIdYearSortedMapType,
 }
 
@@ -47,65 +47,13 @@ class App extends React.Component<{},State> {
     errors: [],
     status: "",
     tvShowYearSortedMap: new Map(),
-    topXShowData: [],
+    topXData: [],
   }
 
   componentDidMount() {
     this.fetchCsv()
   }
 
-  componentDidUpdate(prevProps: {}, prevState: State) {
-    if(this.state.tvShowYearSortedMap !== prevState.tvShowYearSortedMap) {
-      this.requestTitleData()
-    }
-  }
-
-  onSubmit = (e:React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    this.requestTitleData()
-  }
-
-  requestTitleData = async () => {
-    this.setState({
-      errors: [],
-      status: "loading",
-    })
-
-    const topNodeIdsInYear = this.state.tvShowYearSortedMap.get(YEAR)
-    if(topNodeIdsInYear) {
-      const ids:string[] = topNodeIdsInYear.slice(0,TOP_X).map((pair) => pair[0])
-      const results = await Promise.all(
-        ids.map(async id => {
-          try {
-            const data:TVSeriesType = await fetch(`http://localhost:5000/title/${id}`).then(response => response.json())
-            return data
-          }
-          catch(err) {
-            console.error(err)
-            this.setState({
-              errors: [err.message],
-              status: "error",
-            })
-          }
-        })
-      )
-
-
-      const topXShowData:TVSeriesType[] = []
-      results.forEach(r => {
-        if(r) {
-          topXShowData.push(r)
-        }
-      })
-
-      console.log(topXShowData)
-      this.setState({
-        status: "",
-        topXShowData,
-      })
-    }
-  }
 
   fetchCsv() {
     fetch('/example.csv').then((response) => {
@@ -120,19 +68,93 @@ class App extends React.Component<{},State> {
       else {
         throw new Error("No response or body")
       }
-    }).then(parseCsvData).then((rows) => {
-      this.setState({
-        csvData: rows,
-        tvShowYearSortedMap: getTvShowYearSortedMap(rows),
-      })
+    }).then(parseCsvData).then(async (rows) => {
+      console.log(rows)
+      this.processCsvData(rows)
     }).catch(err => console.error(err))
   }
 
+  processCsvData = async (rows: CsvDataType[]) => {
+    const data: Map<number, {
+      serie: Map<string,{count: number, titles: Map<string, number>}>,
+      movie: Map<string,{count: number, titles: Map<string, number>}>,
+    }> = new Map()
+
+    rows.forEach(row => {
+      const year = row.Date.getFullYear()
+      if(!data.has(year)) {
+        data.set(year, {
+          serie: new Map<string,{count: number, titles: Map<string, number>}>(),
+          movie: new Map<string,{count: number, titles: Map<string, number>}>(),
+        })
+      }
+
+      const yearData = data.get(year)
+      if(yearData) {
+        const index = row.Title.indexOf(": Season")
+        if(index !== -1) { //if this is a serie
+          const showTitle = row.Title.slice(0, index)
+          if(!yearData.serie.has(showTitle)) {
+            yearData.serie.set(showTitle, {
+              count: 0,
+              titles: new Map<string, number>()
+            })
+          }
+
+          const obj = yearData.serie.get(showTitle)
+          if(obj) {
+            const titleCount = obj.titles.get(row.Title)
+            if(titleCount !== undefined) {
+              obj.titles.set(row.Title, titleCount + 1)
+            }
+            else {
+              obj.titles.set(row.Title, 1)
+            }
+            obj.count++
+          }
+        }
+        else {
+          if(!yearData.movie.has(row.Title)) {
+            yearData.movie.set(row.Title, {
+              count: 0,
+              titles: new Map<string, number>()
+            })
+          }
+
+          const obj = yearData.movie.get(row.Title)
+          if(obj) {
+            const titleCount = obj.titles.get(row.Title)
+            if(titleCount !== undefined) {
+              obj.titles.set(row.Title, titleCount + 1)
+            }
+            else {
+              obj.titles.set(row.Title, 1)
+            }
+            obj.count++
+          }
+        }
+      }
+    })
+
+    data.forEach((yearData, year) => {
+      const serieData = Array.from(yearData.serie).sort(
+        (a, b) => {
+          if(a[1].titles.size > b[1].titles.size) return -1
+          return 1
+        }
+      )
+      console.log(year, serieData)
+
+    })
+  }
+
+
+
   renderData = () => {
-    if(this.state.topXShowData.length > 0) {
+    if(this.state.topXData.length > 0) {
       return (
         <div>
-          <PosterTopX data={this.state.topXShowData}/>
+          <PosterTopX data={this.state.topXData}/>
         </div>
       )
     }
@@ -141,7 +163,6 @@ class App extends React.Component<{},State> {
   render() {
     return (
       <div className="App">
-        {this.state.errors.map((e,i) => <div key={i}>{e}</div>)}
 
         {this.renderData()}
       </div>

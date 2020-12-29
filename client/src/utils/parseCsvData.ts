@@ -1,15 +1,9 @@
 import { csvParse } from "d3"
 
 export type CsvDataType = {
-  Country: string,
-  "Device Type": string,
-  Duration: string,
-  "Duration (s)": number,
-  "Movie ID": string,
-  Timestamp: Date,
+  Date: Date,
   Title: string,
-  "Top Node ID": string,
-  Type: string,
+  topNodeId: string,
 }
 
 export default function parseCsvData(data:string) {
@@ -21,8 +15,8 @@ export default function parseCsvData(data:string) {
       // @ts-ignore
       rows.push({
         ...rawRow,
-        "Duration (s)": parseInt(rawRow["Duration (s)"] || "0"),
-        Timestamp: new Date(rawRow.Timestamp || new Date()),
+        Date: new Date(rawRow.Date || new Date()),
+        topNodeId: "", //to be filled in later
       })
     }
 

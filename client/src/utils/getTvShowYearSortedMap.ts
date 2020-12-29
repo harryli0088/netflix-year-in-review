@@ -7,20 +7,17 @@ export type TopNodeIdYearSortedMapType = Map<number, TopNodeIdCountPairType[]>
 export default function getTvShowYearSortedMap(rows:CsvDataType[]) {
   const tvShowCounterMap = new Map<string, number>()
   rows.forEach(row => {
-    //if this is a TV Series type
-    if(row.Type === "Serie") {
-      const topNodeId = row["Top Node ID"] //get the top node id
-      const key = `${row.Timestamp.getFullYear()}-${topNodeId}`
-      if(!tvShowCounterMap.has(key)) { //if we are encountering this top node for the first time
-        tvShowCounterMap.set(key, 0) //initialize the counter to 0
-      }
-
-      //increment the counter
-      tvShowCounterMap.set(
-        key,
-        (tvShowCounterMap.get(key) || 0) + row["Duration (s)"],
-      )
+    const topNodeId = row.topNodeId
+    const key = `${row.Date.getFullYear()}-${topNodeId}`
+    if(!tvShowCounterMap.has(key)) { //if we are encountering this top node for the first time
+      tvShowCounterMap.set(key, 0) //initialize the counter to 0
     }
+
+    //increment the counter
+    tvShowCounterMap.set(
+      key,
+      (tvShowCounterMap.get(key) || 0) + 1,
+    )
   })
 
   const tvShowYearSortedMap = new Map<number, TopNodeIdCountPairType[]>()
