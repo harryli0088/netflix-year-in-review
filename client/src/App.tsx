@@ -109,7 +109,16 @@ class App extends React.Component<{},State> {
 
   getImgSrcFromTitle = memoize(
     async (title:string) => {
-      return "https://occ-0-444-465.1.nflxso.net/dnm/api/v6/6AYY37jfdO6hpXcMjf9Yu5cnmO0/AAAABUtYiPtQlYLrwSZI6ibYvbn0GHuqySPWlkC9Z9UTxP72KwHjTgmp1Rt90W0euR26wceJ-Wiogmcbtvg4FIBVxKVl_TFg.jpg?r=2a2"
+      try {
+        const topNodeId:string = await fetch(`http://localhost:5000/topNodeIdFromTitle/${title}`).then(response => response.text())
+        const data:TVSeriesType = await fetch(`http://localhost:5000/title/${topNodeId}`).then(response => response.json())
+        return data.image
+      }
+      catch(err) {
+        console.error(err)
+      }
+
+      return ""
     }
   )
 
