@@ -47,7 +47,7 @@ class App extends React.Component<{},State> {
     errors: [],
     status: "",
     titleYearMap: new Map(),
-    topXData: { imgSrc: "", titles: [], year: 0 }
+    topXData: { align: "", imgSrc: "", titles: [], year: 0 }
   }
 
   componentDidMount() {
@@ -95,15 +95,11 @@ class App extends React.Component<{},State> {
           }
         )
 
-        const titles = serieData.map(d => d[0])
-        const {
-          firstValidTitleIndex,
-          imgSrc,
-        } = await this.getImgSrcFromTitle(titles)
+        const titles = serieData.slice(0, TOP_X).map(d => d[0])
         this.setState({
           topXData: {
-            imgSrc,
-            titles: titles.slice(firstValidTitleIndex, firstValidTitleIndex + TOP_X),
+            ...await this.getImgSrcFromTitle(titles[0]),
+            titles,
             year: YEAR,
           }
         })
@@ -112,42 +108,45 @@ class App extends React.Component<{},State> {
   )
 
   getImgSrcFromTitle = memoize(
-    /**
-     * return the index and imgSrc of the first valid title on netflix
-     * @param  titles array of titles, sorted in the order of your choosing
-     * @return        object with fields firstValidTitleIndex and imgSrc
-     */
-    async (titles:string[]) => {
-      //loop through all the titles
-      for(let titleIndex=0; titleIndex<titles.length; ++titleIndex) {
-        try {
-          //try to get the top node id
-          const topNodeId = parseInt(
-            await fetch(`${SERVER_URL}/topNodeIdFromTitle/${titles[titleIndex]}`).then(response => response.text())
-          )
+    async (title:string) => {
+      try {
+        //try to get the top node id
+        const topNodeId = parseInt(
+          await fetch(`${SERVER_URL}/topNodeIdFromTitle/${title}`).then(response => response.text())
+        )
 
-          //if the top node id is valid
-          if(!isNaN(topNodeId)) {
-            const data:TVSeriesType = await fetch(`${SERVER_URL}/title/${topNodeId}`).then(response => response.json())
-            return {
-              firstValidTitleIndex: titleIndex,
-              imgSrc: data.image,
-            }
-          }
-          else {
-            throw new Error(`No top node id returned for ${titles[titleIndex]}`)
+        //if the top node id is valid
+        if(!isNaN(topNodeId)) {
+          const data:TVSeriesType = await fetch(`${SERVER_URL}/title/${topNodeId}`).then(response => response.json())
+          return {
+            align: "right",
+            imgSrc: data.image,
           }
         }
-        catch(err) { //if there was some error, move on to the next title in the array
-          console.error(err)
+        else {
+          throw new Error(`No top node id returned for ${title}`)
         }
       }
-
-      //we didn't find any valid titles
-      return {
-        firstValidTitleIndex: -1,
-        imgSrc: "",
+      catch(err) { //if there was some error, move on to the next title in the array
+        console.error(err)
       }
+
+
+      try {
+        const data = await fetch(`${SERVER_URL}/tmdbInfo/${title}`).then(response => response.json())
+        const imgSrc = `https://image.tmdb.org/t/p/original/${data.results[0].backdrop_path}`
+        console.log(imgSrc)
+        return {
+          align: "center",
+          imgSrc,
+        }
+      }
+      catch(err) {
+        console.error(err)
+      }
+
+      //we didn't find any valid images
+      return {align:"",imgSrc:""}
     }
   )
 

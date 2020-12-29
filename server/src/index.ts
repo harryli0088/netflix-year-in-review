@@ -1,3 +1,5 @@
+require('dotenv').config()
+const TMDB_API_KEY = process.env.TMDB_API_KEY
 import axios from 'axios'
 import cheerio from 'cheerio'
 import express from 'express'
@@ -35,6 +37,7 @@ app.get('/title/:id', (req:express.Request, res:express.Response) => {
     res.status(500).send(err.message)
   })
 })
+
 app.get('/topNodeIdFromTitle/:title', async (req:express.Request, res:express.Response) => {
   console.log(req.params.title)
   try {
@@ -46,6 +49,15 @@ app.get('/topNodeIdFromTitle/:title', async (req:express.Request, res:express.Re
     console.error(err)
     res.status(500).send(err.message)
   }
+})
+
+app.get('/tmdbInfo/:title', async (req:express.Request, res:express.Response) => {
+  console.log(req.params.title)
+  axios.get(`https://api.themoviedb.org/3/search/tv?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(req.params.title)}`).then(tmdbResponse => {
+    res.status(tmdbResponse.status).send(tmdbResponse.data)
+  }).catch((err) => {
+    res.status(500).send(err.message)
+  })
 })
 
 

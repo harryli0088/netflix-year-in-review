@@ -4,6 +4,7 @@ import backgroundImageSrc from "./top5.jpg"
 import "./posterTopX.scss"
 
 export type PosterTopXRequiredProps = {
+  align: string,
   imgSrc: string,
   titles: string[],
   year: number,
@@ -19,7 +20,7 @@ interface State {
 
 const EXPECTED_IMAGE_DIMENSIONS = {
   height: 952,
-  width: 1693,
+  width: 998,
 }
 
 export default class PosterTopX extends React.Component<Props,{}> {
@@ -40,23 +41,38 @@ export default class PosterTopX extends React.Component<Props,{}> {
 
   componentDidUpdate() {
     const {
+      align,
       imgSrc,
       titles,
       year,
     } = this.props
 
+    const {
+      posterImage,
+    } = this.state
+
     const ctx = this.ctx
     if(ctx) {
-      ctx.font = '120px Bebas Neue'
       ctx.drawImage(this.getBackgroundImage(backgroundImageSrc), 0, 0)
+
+      //crop a square from the image
       ctx.drawImage(
         this.getPosterImage(imgSrc),
-        329 - this.state.posterImage.width,
+        (
+          align === "center"
+          ? (posterImage.width - posterImage.height) / 2
+          : posterImage.width - posterImage.height
+        ),
+        0,
+        Math.min(posterImage.width, posterImage.height),
+        Math.min(posterImage.width, posterImage.height),
+        0,
         225,
         EXPECTED_IMAGE_DIMENSIONS.width,
         EXPECTED_IMAGE_DIMENSIONS.height,
       )
 
+      ctx.font = '120px Bebas Neue'
       ctx.fillStyle = "white";
       ctx.fillText(this.props.titles[0], this.state.backgroundImage.width/3 - 100, this.state.backgroundImage.height*2/3 + 50)
 
