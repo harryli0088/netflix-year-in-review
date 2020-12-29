@@ -64,33 +64,32 @@ function getGoogleUrl(searchString:string):string {
 }
 
 async function getTopNodeIdFromGoogleUsingTitle(title:string) {
-  const url = getGoogleUrl(title)
+  const url = getGoogleUrl(title) //build a google search url using the title
 
-  const response = await axios.get(url)
+  const response = await axios.get(url) //request search data from google
 
   const $ = cheerio.load(response.data)
 
-  const anchors = $("a")
+  const anchors = $("a") //get the anchors in the document
 
   const NETFLIX_URL = "https://www.netflix.com/title/"
-  let topNodeId = ""
-  for(let i=0; i<anchors.length; ++i) {
+  for(let i=0; i<anchors.length; ++i) { //loop through all the anchors
     const a = anchors[i] as cheerio.TagElement
 
-    const href = a.attribs.href
-    const netflixStartIndex = href.indexOf(NETFLIX_URL)
-    if(netflixStartIndex >= 0) {
+    const href = a.attribs.href //get the href attribute of this anchor
+    const netflixStartIndex = href.indexOf(NETFLIX_URL) //determine if the netflix url appears in the href
+    if(netflixStartIndex >= 0) { //if the netflix url appears in the href
+      //determine if there is an ampersand in the href
       const indexOfAmpersand = href.indexOf("&")
-      const endIndex = indexOfAmpersand===-1 ? href.length : indexOfAmpersand
-      topNodeId = href.slice(netflixStartIndex + NETFLIX_URL.length, endIndex)
+      const endIndex = indexOfAmpersand===-1 ? href.length : indexOfAmpersand //our end index should be the ampersand if it is there, else the end of the href
 
-      break
+      return href.slice(netflixStartIndex + NETFLIX_URL.length, endIndex) //return only the top node id part of the href
     }
   }
 
-  return topNodeId
+  return "" //we did not find any netflix urls in the results
 }
 
 function sleep(ms:number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise(resolve => setTimeout(resolve, ms))
 }
