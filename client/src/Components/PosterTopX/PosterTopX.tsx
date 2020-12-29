@@ -89,7 +89,7 @@ export default class PosterTopX extends React.Component<Props,{}> {
     (imgSrc: string) => {
       const img = new Image()
       img.src = imgSrc
-
+      img.setAttribute('crossorigin', 'anonymous')
       img.onload = () => this.setState({
         backgroundImage: {height: img.height, width: img.width}
       })
@@ -102,7 +102,7 @@ export default class PosterTopX extends React.Component<Props,{}> {
     (imgSrc: string) => {
       const img = new Image()
       img.src = imgSrc
-
+      img.setAttribute('crossorigin', 'anonymous')
       img.onload = () => this.setState({
         posterImage: {height: img.height, width: img.width}
       })
@@ -111,11 +111,21 @@ export default class PosterTopX extends React.Component<Props,{}> {
     }
   )
 
+  download = () => {
+    if(this.canvasRef.current) {
+      const a = document.createElement("a")
+      a.href = this.canvasRef.current.toDataURL("image/png")
+      a.download = "Netflix_Year_In_Review_Top_5.png"
+      a.click()
+    }
+  }
+
 
   render() {
     return (
       <div className="poster">
         <canvas ref={this.canvasRef} width={this.state.backgroundImage.width} height={this.state.backgroundImage.height}/>
+        <button onClick={e => this.download()}>Download</button>
       </div>
     )
   }
