@@ -66,16 +66,16 @@ export default function processCsvData(rows: CsvDataType[]) {
     }
   })
 
-  titleYearMap.forEach((yearData, year) => {
-    const serieData = Array.from(yearData.serie).sort(
-      (a, b) => {
-        if(a[1].titles.size > b[1].titles.size) return -1
-        return 1
-      }
-    )
-    console.log(year, serieData)
-
-  })
+  // titleYearMap.forEach((yearData, year) => {
+  //   const serieData = Array.from(yearData.serie).sort(
+  //     (a, b) => {
+  //       if(a[1].titles.size > b[1].titles.size) return -1
+  //       return 1
+  //     }
+  //   )
+  //   console.log(year, serieData)
+  //
+  // })
 
   return titleYearMap
 }
