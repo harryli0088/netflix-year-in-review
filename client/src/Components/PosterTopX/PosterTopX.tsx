@@ -1,10 +1,14 @@
 import React from 'react'
-import { TVSeriesType } from "App"
+// import { TVSeriesType } from "App"
 import "./posterTopX.scss"
 
-type Props = {
-  data: TVSeriesType[],
+export type PosterTopXRequiredProps = {
+  imgSrc: string,
+  titles: string[],
+  year: number,
+}
 
+export type Props = PosterTopXRequiredProps & {
   height: number,
   width: number,
 }
@@ -17,7 +21,9 @@ export default class PosterTopX extends React.Component<Props,{}> {
 
   render() {
     const {
-      data,
+      imgSrc,
+      titles,
+      year,
 
       height,
       width,
@@ -28,21 +34,21 @@ export default class PosterTopX extends React.Component<Props,{}> {
         height,
         width,
       }}>
-        <h1>Your top shows in 2020</h1>
+        <h1>Your top shows in {year}</h1>
 
         <div className="img-container">
           <div className="fake-border" style={{transform: "translate(55px, -50px)"}}></div>
           <div className="fake-border" style={{transform: "translate(30px, -25px)"}}></div>
-          <img src={data[0].image} alt={`${data[0].name}`}/>
+          <img src={imgSrc} alt={`${titles[0]}`}/>
         </div>
 
         <div className="main-title">
           <div className="main-title-background"></div>
-          <span>#1. {data[0].name}</span>
+          <span>#1. {titles[0]}</span>
         </div>
-        <div>{data.slice(1, data.length).map((d,i) =>
+        <div>{titles.slice(1, titles.length).map((d,i) =>
           <div key={i} className="title-container">
-            #{i+2}. <span className="title">{d.name}</span>
+            #{i+2}. <span className="title">{d}</span>
           </div>
         )}</div>
 

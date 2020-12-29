@@ -1,8 +1,9 @@
 import React from 'react'
-import PosterTopX from 'Components/PosterTopX/PosterTopX'
+import memoize from 'memoize-one'
+import PosterTopX, { PosterTopXRequiredProps } from 'Components/PosterTopX/PosterTopX'
 import { TOP_X, YEAR } from "consts"
-import getTvShowYearSortedMap, { TopNodeIdYearSortedMapType } from "utils/getTvShowYearSortedMap"
 import parseCsvData, { CsvDataType } from "utils/parseCsvData"
+import processCsvData, { TitleYearMapType } from "utils/processCsvData"
 import './App.css'
 
 export type TVSeriesType = {
@@ -37,8 +38,8 @@ interface State {
   csvData: CsvDataType[],
   errors: string[],
   status: string,
-  topXData: TVSeriesType[],
-  tvShowYearSortedMap: TopNodeIdYearSortedMapType,
+  titleYearMap: TitleYearMapType,
+  topXData: PosterTopXRequiredProps,
 }
 
 class App extends React.Component<{},State> {
@@ -46,8 +47,8 @@ class App extends React.Component<{},State> {
     csvData: [],
     errors: [],
     status: "",
-    tvShowYearSortedMap: new Map(),
-    topXData: [],
+    titleYearMap: new Map(),
+    topXData: { imgSrc: "", titles: [], year: 0 }
   }
 
   componentDidMount() {
@@ -70,91 +71,57 @@ class App extends React.Component<{},State> {
       }
     }).then(parseCsvData).then(async (rows) => {
       console.log(rows)
-      this.processCsvData(rows)
+      const titleYearMap = processCsvData(rows)
+
+      const yearData = titleYearMap.get(YEAR)
+      if(yearData) {
+        this.setState({
+          csvData: rows,
+          titleYearMap,
+        })
+        this.getTopXData(titleYearMap, YEAR)
+      }
     }).catch(err => console.error(err))
   }
 
-  processCsvData = async (rows: CsvDataType[]) => {
-    const data: Map<number, {
-      serie: Map<string,{count: number, titles: Map<string, number>}>,
-      movie: Map<string,{count: number, titles: Map<string, number>}>,
-    }> = new Map()
+  getTopXData = memoize(
+    async (titleYearMap: TitleYearMapType, year: number) => {
+      const data = titleYearMap.get(year)
+      if(data) {
+        const serieData = Array.from(data.serie).sort(
+          (a, b) => {
+            if(a[1].titles.size > b[1].titles.size) return -1
+            return 1
+          }
+        )
 
-    rows.forEach(row => {
-      const year = row.Date.getFullYear()
-      if(!data.has(year)) {
-        data.set(year, {
-          serie: new Map<string,{count: number, titles: Map<string, number>}>(),
-          movie: new Map<string,{count: number, titles: Map<string, number>}>(),
+        const titles = serieData.slice(0, TOP_X).map(d => d[0])
+        this.setState({
+          topXData: {
+            imgSrc: await this.getImgSrcFromTitle(titles[0]),
+            titles,
+            year: YEAR,
+          }
         })
       }
+    }
+  )
 
-      const yearData = data.get(year)
-      if(yearData) {
-        const index = row.Title.indexOf(": Season")
-        if(index !== -1) { //if this is a serie
-          const showTitle = row.Title.slice(0, index)
-          if(!yearData.serie.has(showTitle)) {
-            yearData.serie.set(showTitle, {
-              count: 0,
-              titles: new Map<string, number>()
-            })
-          }
-
-          const obj = yearData.serie.get(showTitle)
-          if(obj) {
-            const titleCount = obj.titles.get(row.Title)
-            if(titleCount !== undefined) {
-              obj.titles.set(row.Title, titleCount + 1)
-            }
-            else {
-              obj.titles.set(row.Title, 1)
-            }
-            obj.count++
-          }
-        }
-        else {
-          if(!yearData.movie.has(row.Title)) {
-            yearData.movie.set(row.Title, {
-              count: 0,
-              titles: new Map<string, number>()
-            })
-          }
-
-          const obj = yearData.movie.get(row.Title)
-          if(obj) {
-            const titleCount = obj.titles.get(row.Title)
-            if(titleCount !== undefined) {
-              obj.titles.set(row.Title, titleCount + 1)
-            }
-            else {
-              obj.titles.set(row.Title, 1)
-            }
-            obj.count++
-          }
-        }
-      }
-    })
-
-    data.forEach((yearData, year) => {
-      const serieData = Array.from(yearData.serie).sort(
-        (a, b) => {
-          if(a[1].titles.size > b[1].titles.size) return -1
-          return 1
-        }
-      )
-      console.log(year, serieData)
-
-    })
-  }
+  getImgSrcFromTitle = memoize(
+    async (title:string) => {
+      return "https://occ-0-444-465.1.nflxso.net/dnm/api/v6/6AYY37jfdO6hpXcMjf9Yu5cnmO0/AAAABUtYiPtQlYLrwSZI6ibYvbn0GHuqySPWlkC9Z9UTxP72KwHjTgmp1Rt90W0euR26wceJ-Wiogmcbtvg4FIBVxKVl_TFg.jpg?r=2a2"
+    }
+  )
 
 
 
   renderData = () => {
-    if(this.state.topXData.length > 0) {
+    if(this.state.topXData.imgSrc) {
       return (
         <div>
-          <PosterTopX data={this.state.topXData}/>
+          <PosterTopX
+            {...this.state.topXData}
+          />
         </div>
       )
     }
