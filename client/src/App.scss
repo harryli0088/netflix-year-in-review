@@ -1,0 +1,14 @@
+.App {
+  text-align: center;
+  background-color: #111;
+  height: 100vh;
+  overflow-x: hidden;
+  color: white;
+}
+
+a {
+  color: #AED6F1;
+  &:visited {
+    color: #D2B4DE;
+  }
+}

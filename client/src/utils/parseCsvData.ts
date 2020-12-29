@@ -6,7 +6,7 @@ export type CsvDataType = {
   topNodeId: string,
 }
 
-export default function parseCsvData(data:string) {
+export default function parseCsvData(data:string):CsvDataType[] {
   if(data) {
     const parsedData = csvParse(data)
     const rows: CsvDataType[] = []
@@ -23,6 +23,8 @@ export default function parseCsvData(data:string) {
     return rows
   }
   else {
-    throw new Error("No data")
+    console.error("No Data")
   }
+
+  return []
 }

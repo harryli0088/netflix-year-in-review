@@ -1,10 +1,11 @@
 import React from 'react'
 import memoize from 'memoize-one'
+import Landing from 'Components/Landing/Landing'
 import PosterTopX, { PosterTopXRequiredProps } from 'Components/PosterTopX/PosterTopX'
 import { SERVER_URL, TOP_X, YEAR } from "consts"
 import parseCsvData, { CsvDataType } from "utils/parseCsvData"
 import processCsvData, { TitleYearMapType } from "utils/processCsvData"
-import './App.css'
+import './App.scss'
 
 export type TVSeriesType = {
   "@context": string,
@@ -51,7 +52,7 @@ class App extends React.Component<{},State> {
   }
 
   componentDidMount() {
-    this.fetchCsv()
+    fetch(`${SERVER_URL}/`)
   }
 
 
@@ -68,20 +69,22 @@ class App extends React.Component<{},State> {
       else {
         throw new Error("No response or body")
       }
-    }).then(parseCsvData).then(async (rows) => {
-      console.log(rows)
-      const titleYearMap = processCsvData(rows)
+    }).then(parseCsvData).then(this.processData).catch(err => console.error(err))
+  }
 
-      const yearData = titleYearMap.get(YEAR)
-      console.log(yearData)
-      if(yearData) {
-        this.setState({
-          csvData: rows,
-          titleYearMap,
-        })
-        this.getTopXData(titleYearMap, YEAR)
-      }
-    }).catch(err => console.error(err))
+  processData = async (rows:CsvDataType[]) => {
+    console.log(rows)
+    const titleYearMap = processCsvData(rows)
+
+    const yearData = titleYearMap.get(YEAR)
+    console.log(yearData)
+    if(yearData) {
+      this.setState({
+        csvData: rows,
+        titleYearMap,
+      })
+      this.getTopXData(titleYearMap, YEAR)
+    }
   }
 
   getTopXData = memoize(
@@ -150,9 +153,12 @@ class App extends React.Component<{},State> {
     }
   )
 
+  fileContentCallback = (content:string) => {
+    this.processData(parseCsvData(content)).catch(console.error)
+  }
 
 
-  renderData = () => {
+  renderContent = () => {
     if(this.state.topXData.imgSrc) {
       return (
         <div>
@@ -162,13 +168,18 @@ class App extends React.Component<{},State> {
         </div>
       )
     }
+
+    return (
+      <Landing
+        fileContentCallback={this.fileContentCallback}
+      />
+    )
   }
 
   render() {
     return (
       <div className="App">
-
-        {this.renderData()}
+        {this.renderContent()}
       </div>
     )
   }

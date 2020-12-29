@@ -11,6 +11,10 @@ app.use(bodyParser.json({limit: '50mb'}))
 app.use(cors())
 const port = 5000
 
+app.get('/', (req:express.Request, res:express.Response) => {
+  res.status(200).send("Hello!")
+})
+
 app.get('/title/:id', (req:express.Request, res:express.Response) => {
   const url = getNetflixUrl(req)
   axios.get(url).then(response => {
