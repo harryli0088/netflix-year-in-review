@@ -73,6 +73,7 @@ class App extends React.Component<{},State> {
       const titleYearMap = processCsvData(rows)
 
       const yearData = titleYearMap.get(YEAR)
+      console.log(yearData)
       if(yearData) {
         this.setState({
           csvData: rows,
