@@ -30,22 +30,26 @@ const EXPECTED_IMAGE_DIMENSIONS = {
   width: 998,
 }
 
-export default class PosterTopX extends React.Component<Props,{}> {
-  canvasRef: React.RefObject<HTMLCanvasElement> = React.createRef()
-  ctx?: CanvasRenderingContext2D | null
+export default class PosterTopX extends React.Component<Props,State> {
+  canvas: HTMLCanvasElement
+  ctx: CanvasRenderingContext2D | null
   imgRef: React.RefObject<HTMLImageElement> = React.createRef()
 
-  state = {
-    backgroundImage: {height:0, width:0},
-    posterImage: {height:0, width:0},
-    showShare: navigator.share !== undefined,
+  constructor(props:Props) {
+    super(props)
+
+    this.state = {
+      backgroundImage: {height:0, width:0},
+      posterImage: {height:0, width:0},
+      showShare: navigator.share !== undefined,
+    }
+
+    this.canvas = document.createElement('canvas')
+    this.ctx = this.canvas.getContext('2d')
   }
 
   componentDidMount() {
-    if(this.canvasRef.current) {
-      this.ctx = this.canvasRef.current.getContext('2d')
-      this.forceUpdate()
-    }
+    this.forceUpdate()
   }
 
   componentDidUpdate = () => {
@@ -57,11 +61,15 @@ export default class PosterTopX extends React.Component<Props,{}> {
     } = this.props
 
     const {
+      backgroundImage,
       posterImage,
     } = this.state
 
     const ctx = this.ctx
     if(ctx) {
+      this.canvas.width = backgroundImage.width
+      this.canvas.height = backgroundImage.height
+
       ctx.save()
       // ctx.scale(DPR, DPR)
 
@@ -97,8 +105,8 @@ export default class PosterTopX extends React.Component<Props,{}> {
 
       ctx.restore()
 
-      if(this.canvasRef.current && this.imgRef.current) {
-        this.imgRef.current.src = this.canvasRef.current.toDataURL("image/png")
+      if(this.imgRef.current) {
+        this.imgRef.current.src = this.canvas.toDataURL("image/png")
       }
     }
   }
@@ -130,29 +138,25 @@ export default class PosterTopX extends React.Component<Props,{}> {
   )
 
   download = () => {
-    if(this.canvasRef.current) {
-      const a = document.createElement("a")
-      a.href = this.canvasRef.current.toDataURL("image/png")
-      a.download = "Netflix_Year_In_Review_Top_5.png"
-      a.click()
-    }
+    const a = document.createElement("a")
+    a.href = this.canvas.toDataURL("image/png")
+    a.download = "Netflix_Year_In_Review_Top_5.png"
+    a.click()
   }
 
   share = () => {
-    if(this.canvasRef.current) {
-      this.canvasRef.current.toBlob((blob) => {
-        if(blob) {
-          shareApi(blob)
-          // const dumb = async () => {
-          //   if(await shareApi(blob) === false) {
-          //     this.setState({showShare: true})
-          //   }
-          // }
-          //
-          // dumb()
-        }
-      })
-    }
+    this.canvas.toBlob((blob) => {
+      if(blob) {
+        shareApi(blob)
+        // const dumb = async () => {
+        //   if(await shareApi(blob) === false) {
+        //     this.setState({showShare: true})
+        //   }
+        // }
+        //
+        // dumb()
+      }
+    })
   }
 
   showShare = () => {
@@ -170,13 +174,9 @@ export default class PosterTopX extends React.Component<Props,{}> {
     return (
       <CustomContainer>
         <div className="poster">
-            <canvas
-              ref={this.canvasRef}
-              width={this.state.backgroundImage.width}
-              height={this.state.backgroundImage.height}
-            />
-
             <img ref={this.imgRef} alt="Loading..."/>
+
+            <br/>
 
             <div>
               <button onClick={e => this.download()}><FontAwesomeIcon icon={faDownload}/> Save Image</button>

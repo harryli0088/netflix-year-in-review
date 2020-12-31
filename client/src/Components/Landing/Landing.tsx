@@ -48,15 +48,13 @@ export default class Landing extends React.Component<Props,State> {
   }
 
   getModal = () => {
-    if(this.state.status) {
-      return (
-        <Modal>
-          <Modal.Header>
-            <Modal.Title>{this.state.status}</Modal.Title>
-          </Modal.Header>
-        </Modal>
-      )
-    }
+    return (
+      <Modal show={this.state.status.length > 0}>
+        <Modal.Header>
+          <Modal.Title>{this.state.status}</Modal.Title>
+        </Modal.Header>
+      </Modal>
+    )
   }
 
 
