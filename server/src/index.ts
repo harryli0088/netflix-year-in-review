@@ -5,11 +5,18 @@ import cheerio from 'cheerio'
 import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
+import rateLimit from "express-rate-limit"
 
 const app = express()
 app.use(bodyParser.json({limit: '50mb'}))
 app.use(cors())
 const port = 5000
+
+const limiter = rateLimit({
+  windowMs: 1000, // 1 second
+  max: 10 // limit each IP to 10 requests per windowMs
+})
+app.use(limiter)
 
 app.get('/', (req:express.Request, res:express.Response) => {
   res.status(200).send("Hello!")
