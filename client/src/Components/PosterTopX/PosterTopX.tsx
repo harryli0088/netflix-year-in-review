@@ -33,6 +33,7 @@ const EXPECTED_IMAGE_DIMENSIONS = {
 export default class PosterTopX extends React.Component<Props,{}> {
   canvasRef: React.RefObject<HTMLCanvasElement> = React.createRef()
   ctx?: CanvasRenderingContext2D | null
+  imgRef: React.RefObject<HTMLImageElement> = React.createRef()
 
   state = {
     backgroundImage: {height:0, width:0},
@@ -47,7 +48,7 @@ export default class PosterTopX extends React.Component<Props,{}> {
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate = () => {
     const {
       align,
       imgSrc,
@@ -62,7 +63,7 @@ export default class PosterTopX extends React.Component<Props,{}> {
     const ctx = this.ctx
     if(ctx) {
       ctx.save()
-      ctx.scale(DPR, DPR)
+      // ctx.scale(DPR, DPR)
 
       ctx.drawImage(this.getBackgroundImage(backgroundImageSrc), 0, 0)
 
@@ -95,6 +96,10 @@ export default class PosterTopX extends React.Component<Props,{}> {
       })
 
       ctx.restore()
+
+      if(this.canvasRef.current && this.imgRef.current) {
+        this.imgRef.current.src = this.canvasRef.current.toDataURL("image/png")
+      }
     }
   }
 
@@ -167,9 +172,11 @@ export default class PosterTopX extends React.Component<Props,{}> {
         <div className="poster">
             <canvas
               ref={this.canvasRef}
-              width={this.state.backgroundImage.width * DPR}
-              height={this.state.backgroundImage.height * DPR}
+              width={this.state.backgroundImage.width}
+              height={this.state.backgroundImage.height}
             />
+
+            <img ref={this.imgRef} alt="Loading..."/>
 
             <div>
               <button onClick={e => this.download()}><FontAwesomeIcon icon={faDownload}/> Save Image</button>

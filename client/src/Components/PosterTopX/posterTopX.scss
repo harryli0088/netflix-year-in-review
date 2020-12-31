@@ -1,7 +1,14 @@
 .poster {
   padding-top: 1em;
-  
+  position: relative;
   canvas {
     width: 100%;
+  }
+
+  img {
+    width: 100%;
+    position: absolute;
+    top: 1em;
+    left: 0;
   }
 }
