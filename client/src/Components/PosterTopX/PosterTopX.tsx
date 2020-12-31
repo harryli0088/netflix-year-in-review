@@ -7,6 +7,8 @@ import shareApi from "utils/shareApi"
 import backgroundImageSrc from "./top5.jpg"
 import "./posterTopX.scss"
 
+const DPR = window.devicePixelRatio
+
 export type PosterTopXRequiredProps = {
   align: string,
   imgSrc: string,
@@ -59,6 +61,9 @@ export default class PosterTopX extends React.Component<Props,{}> {
 
     const ctx = this.ctx
     if(ctx) {
+      ctx.save()
+      ctx.scale(DPR, DPR)
+
       ctx.drawImage(this.getBackgroundImage(backgroundImageSrc), 0, 0)
 
       //crop a square from the image
@@ -88,6 +93,8 @@ export default class PosterTopX extends React.Component<Props,{}> {
           ctx.fillText(t, this.state.backgroundImage.width/3 - 100, this.state.backgroundImage.height*2/3 + 175 + 89*i)
         }
       })
+
+      ctx.restore()
     }
   }
 
@@ -158,7 +165,11 @@ export default class PosterTopX extends React.Component<Props,{}> {
     return (
       <CustomContainer>
         <div className="poster">
-            <canvas ref={this.canvasRef} width={this.state.backgroundImage.width} height={this.state.backgroundImage.height}/>
+            <canvas
+              ref={this.canvasRef}
+              width={this.state.backgroundImage.width * DPR}
+              height={this.state.backgroundImage.height * DPR}
+            />
 
             <div>
               <button onClick={e => this.download()}><FontAwesomeIcon icon={faDownload}/> Save Image</button>
