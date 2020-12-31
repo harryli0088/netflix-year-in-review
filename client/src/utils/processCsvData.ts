@@ -1,22 +1,24 @@
 import indexOfMultiple from "utils/indexOfMultiple"
 import { CsvDataType } from "utils/parseCsvData"
 
-type TitleDataType = {count: number, titles: Map<string, number>}
-type TitleMapType = Map<string,TitleDataType>
+type NameDataType = {count: number, titles: Map<string, number>}
+type NameMapType = Map<string,NameDataType>
 export type TitleYearMapType = Map<number, {
-  [typeKey:string]: TitleMapType,
+  [typeKey:string]: NameMapType,
 }>
 
 export default function processCsvData(rows: CsvDataType[]) {
   const titleYearMap:TitleYearMapType = new Map()
+
+  let multiplier = 1
 
   //for each row
   rows.forEach(row => {
     const year = row.Date.getFullYear() //get the year
     if(!titleYearMap.has(year)) { //if we are encountering this year for the first time
       titleYearMap.set(year, { //initialize a value in the map for this year
-        serie: new Map<string,TitleDataType>(),
-        movie: new Map<string,TitleDataType>(),
+        serie: new Map<string,NameDataType>(),
+        movie: new Map<string,NameDataType>(),
       })
     }
 
@@ -29,17 +31,21 @@ export default function processCsvData(rows: CsvDataType[]) {
       )
 
       const typeKey = index === -1 ? "movie" : "serie"
-      const titleKey = index === -1 ? row.Title : row.Title.slice(0, index)
+      const nameKey = index === -1 ? row.Title : row.Title.slice(0, index) //this could be a movie name or tv show name
       if(yearData[typeKey]) { //keep typescript happy
-        if(!yearData[typeKey].has(titleKey)) { //if we are encountering this show for the first time
-          yearData[typeKey].set(titleKey, { //initialize a value
+        if(!yearData[typeKey].has(nameKey)) { //if we are encountering this name for the first time
+          multiplier = 1
+          yearData[typeKey].set(nameKey, { //initialize a value
             count: 0,
             titles: new Map<string, number>(),
           })
         }
+        else {
+          multiplier *= 1.1
+        }
 
-        const titleMap = yearData[typeKey].get(titleKey)
-        updateTitleData(row.Title, titleMap)
+        const titleMap = yearData[typeKey].get(nameKey)
+        updateTitleData(multiplier, row.Title, titleMap)
       }
     }
   })
@@ -48,17 +54,19 @@ export default function processCsvData(rows: CsvDataType[]) {
 }
 
 function updateTitleData(
+  multiplier: number,
   title: string,
-  titleData?: TitleDataType,
+  titleData?: NameDataType,
 ) {
   if(titleData) { //keep typescript happy
     const titleCount = titleData.titles.get(title)
-    if(titleCount === undefined) {
+    if(titleCount === undefined) { //if we're seeing this title for the first time
       titleData.titles.set(title, 1)
+      titleData.count += multiplier
     }
-    else {
+    else { //else we've seen this title before
       titleData.titles.set(title, titleCount + 1)
+      titleData.count += multiplier * 1.5 //repeated viewings count for more
     }
-    titleData.count++
   }
 }

@@ -52,7 +52,7 @@ class App extends React.Component<{},State> {
   }
 
   componentDidMount() {
-    // this.fetchCsv()
+    this.fetchCsv()
     fetch(`${SERVER_URL}/`)
   }
 
