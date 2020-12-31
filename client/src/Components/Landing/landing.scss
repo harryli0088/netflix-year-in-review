@@ -2,37 +2,56 @@
   text-align: left;
 
   header {
-    padding: 1em;
+    padding-top: 1em;
+    padding-bottom: 1em;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
+    text-align: center;
 
 
-    svg {
+    #netflixLogo {
       width: 150px;
+    }
+
+    .navIconContainer {
+      width: 25%;
+      font-size: 9px;
+
+      .navIcon {
+        font-size: 2em;
+      }
     }
   }
 
   section {
-    padding: 1em;
+    padding-top: 1em;
+    padding-bottom: 1em;
   }
 
   #instructions {
     .stepContainer {
       display: flex;
+      padding-top: 0.5em;
+      padding-bottom: 0.5em;
 
       .step {
-        width: 25%;
+        width: 20%;
         display: flex;
         align-items: center;
         font-weight: bold;
+        font-size: 25px;
+        font-family: 'Bebas Neue';
       }
 
 
       .stepContent {
-        width: 50%;
+        width: 55%;
+        font-size: 9px;
 
         .stepTitle {
           font-weight: bold;
+          font-size: 18px;
+          font-family: 'Bebas Neue';
         }
       }
 
@@ -42,14 +61,51 @@
         align-items: center;
       }
     }
+
+    a, a:visited {
+      #step2IconContainer {
+        color: white;
+        text-decoration: none;
+        text-align: center;
+        background: #0090CE;
+        border: 1px solid white;
+        border-radius: 15px;
+        font-family: 'Bebas Neue';
+        font-size: 10px;
+
+        #step2Icon {
+          font-size: 2em;
+        }
+
+        div {
+          text-decoration: none;
+        }
+      }
+    }
   }
 
   #uploadFileContainer {
     #fileUploadButton {
-      background: gray;
-      padding: 2em;
+      background: #333;
+      border: 1px solid white;
+      border-radius: 5px;
+      padding: 15px;
+      text-align: center;
+      font-size: 3em;
       display: block;
       cursor: pointer;
     }
+  }
+
+  #submitButton {
+    background: #0090CE;
+    font-size: 22px;
+    font-family: 'Bebas Neue';
+    color: white;
+    border-radius: 3px;
+    padding: 1em;
+    width: 100%;
+    border: none;
+    outline: none;
   }
 }

@@ -52,7 +52,7 @@ class App extends React.Component<{},State> {
   }
 
   componentDidMount() {
-    this.fetchCsv()
+    // this.fetchCsv()
     fetch(`${SERVER_URL}/`)
   }
 
@@ -113,31 +113,32 @@ class App extends React.Component<{},State> {
 
   getImgSrcFromTitle = memoize(
     async (title:string) => {
-      try {
-        //try to get the top node id
-        const topNodeId = parseInt(
-          await fetch(`${SERVER_URL}/topNodeIdFromTitle/${title}`).then(response => response.text())
-        )
-
-        //if the top node id is valid
-        if(!isNaN(topNodeId)) {
-          const data:TVSeriesType = await fetch(`${SERVER_URL}/title/${topNodeId}`).then(response => response.json())
-          return {
-            align: "right",
-            imgSrc: data.image,
-          }
-        }
-        else {
-          throw new Error(`No top node id returned for ${title}`)
-        }
-      }
-      catch(err) { //if there was some error, move on to the next title in the array
-        console.error(err)
-      }
+      // try {
+      //   //try to get the top node id
+      //   const topNodeId = parseInt(
+      //     await fetch(`${SERVER_URL}/topNodeIdFromTitle/${title}`).then(response => response.text())
+      //   )
+      //
+      //   //if the top node id is valid
+      //   if(!isNaN(topNodeId)) {
+      //     const data:TVSeriesType = await fetch(`${SERVER_URL}/title/${topNodeId}`).then(response => response.json())
+      //     return {
+      //       align: "right",
+      //       imgSrc: data.image,
+      //     }
+      //   }
+      //   else {
+      //     throw new Error(`No top node id returned for ${title}`)
+      //   }
+      // }
+      // catch(err) { //if there was some error, move on to the next title in the array
+      //   console.error(err)
+      // }
 
 
       try {
         const data = await fetch(`${SERVER_URL}/tmdbInfo/${title}`).then(response => response.json())
+        console.log(data)
         const imgSrc = `https://image.tmdb.org/t/p/original/${data.results[0].backdrop_path}`
         console.log(imgSrc)
         return {
