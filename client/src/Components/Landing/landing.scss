@@ -33,18 +33,8 @@
       display: flex;
       padding-top: 1em;
 
-      .step {
-        width: 20%;
-        display: flex;
-        align-items: center;
-        font-weight: bold;
-        font-size: 25px;
-        font-family: 'Bebas Neue';
-      }
-
-
       .stepContent {
-        width: 55%;
+        width: 80%;
         font-size: 9px;
 
         .stepTitle {
@@ -97,21 +87,11 @@
       border-radius: 5px;
       padding: 15px;
       text-align: center;
-      font-size: 3em;
       display: block;
       cursor: pointer;
+      background: #0090CE;
+      font-size: 22px;
+      font-family: 'Bebas Neue';
     }
-  }
-
-  #submitButton {
-    background: #0090CE;
-    font-size: 22px;
-    font-family: 'Bebas Neue';
-    color: white;
-    border-radius: 3px;
-    padding: 1em;
-    width: 100%;
-    border: none;
-    outline: none;
   }
 }

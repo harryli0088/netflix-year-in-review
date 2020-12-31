@@ -97,10 +97,8 @@ export default class Landing extends React.Component<Props,State> {
             <p>INSTRUCTIONS:</p>
 
             <div className="stepContainer">
-              <div className="step">STEP 1</div>
-
               <div className="stepContent">
-                <div className="stepTitle">LOG IN TO NETFLIX</div>
+                <div className="stepTitle">1. LOG IN TO NETFLIX</div>
                 <p>If you are using a shared account, make sure you are logged into your specific profile</p>
               </div>
 
@@ -108,10 +106,8 @@ export default class Landing extends React.Component<Props,State> {
             </div>
 
             <div className="stepContainer">
-              <div className="step">STEP 2</div>
-
               <div className="stepContent">
-                <div className="stepTitle">CLICK HERE</div>
+                <div className="stepTitle">2. CLICK HERE</div>
                 <p>Links to official Netflix Viewing Activity log <a href="https:///www.netflix.com/viewingactivity" target="_blank" rel="noopener noreferrer">https:///www.netflix.com/viewingactivity</a></p>
               </div>
 
@@ -127,10 +123,8 @@ export default class Landing extends React.Component<Props,State> {
             </div>
 
             <div className="stepContainer">
-              <div className="step">STEP 3</div>
-
               <div className="stepContent">
-                <div className="stepTitle">Click "Download all"</div>
+                <div className="stepTitle">3. Click "Download all"</div>
                 <p>Scroll all the way to the bottom of the page and click on "Download All"</p>
               </div>
 
@@ -138,10 +132,8 @@ export default class Landing extends React.Component<Props,State> {
             </div>
 
             <div className="stepContainer">
-              <div className="step">STEP 4</div>
-
               <div className="stepContent">
-                <div className="stepTitle">UPLOAD .CSV FILE HERE</div>
+                <div className="stepTitle">4. UPLOAD .CSV FILE HERE</div>
               </div>
 
               <div className="stepIcon"></div>
@@ -151,16 +143,10 @@ export default class Landing extends React.Component<Props,State> {
           <section>
             <div id="uploadFileContainer">
               <label id="fileUploadButton" htmlFor="fileUpload">
-                <FontAwesomeIcon icon={faCloudUploadAlt}/>
+                Tap to Upload <FontAwesomeIcon icon={faCloudUploadAlt}/>
               </label>
               <input id="fileUpload" type="file" onChange={this.uploadFile} accept=".csv" hidden/>
             </div>
-          </section>
-
-          <section>
-            <button id="submitButton">
-              Let’s see your 2020 Netflix YEAR IN REVIEW!
-            </button>
           </section>
         </CustomContainer>
       </div>

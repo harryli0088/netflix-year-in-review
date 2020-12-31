@@ -1,0 +1,20 @@
+{
+  "name": "netflix-year-in-review",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "concurrently \"cd client && npm start\" \"cd server && npm run dev\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harryli0088/netflix-year-in-review.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/harryli0088/netflix-year-in-review/issues"
+  },
+  "homepage": "https://github.com/harryli0088/netflix-year-in-review#readme",
+  "devDependencies": {
+    "concurrently": "^5.3.0"
+  }
+}
