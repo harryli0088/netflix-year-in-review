@@ -1,6 +1,6 @@
 import React from 'react'
 
-import "./customContainer.scss"
+import "./customContainer.css"
 
 type Props = {
   children: any,
