@@ -1,6 +1,6 @@
 import React from 'react'
 
-import "./customContainer.css"
+import "./customContainer.scss"
 
 type Props = {
   children: any,
@@ -9,7 +9,9 @@ type Props = {
 export default (props:Props) => {
   return (
     <div className="customContainer">
-      {props.children}
+      <div className="customContainerContent">
+        {props.children}
+      </div>
     </div>
   )
 }
