@@ -10,7 +10,7 @@ import rateLimit from "express-rate-limit"
 const app = express()
 app.use(bodyParser.json({limit: '50mb'}))
 app.use(cors())
-const port = 5000
+const port = process.env.PORT || 5000
 
 const limiter = rateLimit({
   windowMs: 1000, // 1 second
