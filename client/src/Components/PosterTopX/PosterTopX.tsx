@@ -1,8 +1,6 @@
 import React from 'react'
 import memoize from 'memoize-one'
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
+import CustomContainer from 'Components/CustomContainer/CustomContainer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDownload, faShare } from '@fortawesome/free-solid-svg-icons'
 import shareApi from "utils/shareApi"
@@ -158,20 +156,16 @@ export default class PosterTopX extends React.Component<Props,{}> {
 
   render() {
     return (
-      <div className="poster">
-        <Container>
-          <Row>
-            <Col>
-              <canvas ref={this.canvasRef} width={this.state.backgroundImage.width} height={this.state.backgroundImage.height}/>
+      <CustomContainer>
+        <div className="poster">
+            <canvas ref={this.canvasRef} width={this.state.backgroundImage.width} height={this.state.backgroundImage.height}/>
 
-              <div>
-                <button onClick={e => this.download()}><FontAwesomeIcon icon={faDownload}/> Save Image</button>
-                {this.showShare()}
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      </div>
+            <div>
+              <button onClick={e => this.download()}><FontAwesomeIcon icon={faDownload}/> Save Image</button>
+              {this.showShare()}
+            </div>
+        </div>
+      </CustomContainer>
     )
   }
 }

@@ -1,9 +1,7 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faComments, faInfoCircle, faLink, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons'
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
+import CustomContainer from 'Components/CustomContainer/CustomContainer'
 import Modal from 'react-bootstrap/Modal'
 import NetflixLogo from 'Components/NetflixLogo'
 import step1 from './step1.svg'
@@ -67,108 +65,104 @@ export default class Landing extends React.Component<Props,State> {
       <div id="landing">
         {this.getModal()}
 
-        <Container>
-          <Row>
-            <Col>
-              <header>
-                <div className="navIconContainer">
-                  <div className="navIcon">
-                    <FontAwesomeIcon icon={faComments}/>
+        <CustomContainer>
+          <header>
+            <div className="navIconContainer">
+              <div className="navIcon">
+                <FontAwesomeIcon icon={faComments}/>
+              </div>
+              <div>Feedback</div>
+              <div>Survey</div>
+            </div>
+            <NetflixLogo/>
+            <div className="navIconContainer">
+              <div className="navIcon">
+                <FontAwesomeIcon icon={faInfoCircle}/>
+              </div>
+              <div>Design &</div>
+              <div>Development</div>
+            </div>
+          </header>
+
+          <section>
+            <p><b>By Matthew Lau & Harry Li</b></p>
+            <p>Description in progress</p>
+          </section>
+
+          <section>
+            images
+          </section>
+
+          <section id="instructions">
+            <p>INSTRUCTIONS:</p>
+
+            <div className="stepContainer">
+              <div className="step">STEP 1</div>
+
+              <div className="stepContent">
+                <div className="stepTitle">LOG IN TO NETFLIX</div>
+                <p>If you are using a shared account, make sure you are logged into your specific profile</p>
+              </div>
+
+              <div className="stepIcon"><img src={step1} alt="step 1"/></div>
+            </div>
+
+            <div className="stepContainer">
+              <div className="step">STEP 2</div>
+
+              <div className="stepContent">
+                <div className="stepTitle">CLICK HERE</div>
+                <p>Links to official Netflix Viewing Activity log <a href="https:///www.netflix.com/viewingactivity" target="_blank" rel="noopener noreferrer">https:///www.netflix.com/viewingactivity</a></p>
+              </div>
+
+              <div className="stepIcon">
+                <a href="https:///www.netflix.com/viewingactivity" target="_blank" rel="noopener noreferrer">
+                  <div id="step2IconContainer">
+                    <div id="step2Icon"><FontAwesomeIcon icon={faLink}/></div>
+                    <div>Netflix viewing</div>
+                    <div>activity URL</div>
                   </div>
-                  <div>Feedback</div>
-                  <div>Survey</div>
-                </div>
-                <NetflixLogo/>
-                <div className="navIconContainer">
-                  <div className="navIcon">
-                    <FontAwesomeIcon icon={faInfoCircle}/>
-                  </div>
-                  <div>Design &</div>
-                  <div>Development</div>
-                </div>
-              </header>
+                </a>
+              </div>
+            </div>
 
-              <section>
-                <p><b>By Matthew Lau & Harry Li</b></p>
-                <p>Description in progress</p>
-              </section>
+            <div className="stepContainer">
+              <div className="step">STEP 3</div>
 
-              <section>
-                images
-              </section>
+              <div className="stepContent">
+                <div className="stepTitle">Click "Download all"</div>
+                <p>Scroll all the way to the bottom of the page and click on "Download All"</p>
+              </div>
 
-              <section id="instructions">
-                <p>INSTRUCTIONS:</p>
+              <div className="stepIcon"><img src={step3} alt="step 3"/></div>
+            </div>
 
-                <div className="stepContainer">
-                  <div className="step">STEP 1</div>
+            <div className="stepContainer">
+              <div className="step">STEP 4</div>
 
-                  <div className="stepContent">
-                    <div className="stepTitle">LOG IN TO NETFLIX</div>
-                    <p>If you are using a shared account, make sure you are logged into your specific profile</p>
-                  </div>
+              <div className="stepContent">
+                <div className="stepTitle">UPLOAD .CSV FILE HERE</div>
+              </div>
 
-                  <div className="stepIcon"><img src={step1} alt="step 1"/></div>
-                </div>
+              <div className="stepIcon"></div>
+            </div>
+          </section>
 
-                <div className="stepContainer">
-                  <div className="step">STEP 2</div>
+          <section>
+            <div id="uploadFileContainer">
+              <label id="fileUploadButton" htmlFor="fileUpload">
+                <FontAwesomeIcon icon={faCloudUploadAlt}/>
+              </label>
+              <input id="fileUpload" type="file" onChange={this.uploadFile} accept=".csv" hidden/>
+            </div>
+          </section>
 
-                  <div className="stepContent">
-                    <div className="stepTitle">CLICK HERE</div>
-                    <p>Links to official Netflix Viewing Activity log <a href="https:///www.netflix.com/viewingactivity" target="_blank" rel="noopener noreferrer">https:///www.netflix.com/viewingactivity</a></p>
-                  </div>
-
-                  <div className="stepIcon">
-                    <a href="https:///www.netflix.com/viewingactivity" target="_blank" rel="noopener noreferrer">
-                      <div id="step2IconContainer">
-                        <div id="step2Icon"><FontAwesomeIcon icon={faLink}/></div>
-                        <div>Netflix viewing</div>
-                        <div>activity URL</div>
-                      </div>
-                    </a>
-                  </div>
-                </div>
-
-                <div className="stepContainer">
-                  <div className="step">STEP 3</div>
-
-                  <div className="stepContent">
-                    <div className="stepTitle">Click "Download all"</div>
-                    <p>Scroll all the way to the bottom of the page and click on "Download All"</p>
-                  </div>
-
-                  <div className="stepIcon"><img src={step3} alt="step 3"/></div>
-                </div>
-
-                <div className="stepContainer">
-                  <div className="step">STEP 4</div>
-
-                  <div className="stepContent">
-                    <div className="stepTitle">UPLOAD .CSV FILE HERE</div>
-                  </div>
-
-                  <div className="stepIcon"></div>
-                </div>
-              </section>
-
-              <section>
-                <div id="uploadFileContainer">
-                  <label id="fileUploadButton" htmlFor="fileUpload">
-                    <FontAwesomeIcon icon={faCloudUploadAlt}/>
-                  </label>
-                  <input id="fileUpload" type="file" onChange={this.uploadFile} accept=".csv" hidden/>
-                </div>
-              </section>
-
-              <section>
-                <button id="submitButton">
-                  Let’s see your 2020 Netflix YEAR IN REVIEW!
-                </button>
-              </section>
-            </Col>
-          </Row>
-        </Container>
+          <section>
+            <button id="submitButton">
+              Let’s see your 2020 Netflix YEAR IN REVIEW!
+            </button>
+          </section>
+        </CustomContainer>
       </div>
     )
   }
