@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/netflix-year-in-review/static/css/main.ccb4deb9.chunk.css",
-    "main.js": "/netflix-year-in-review/static/js/main.b8429b07.chunk.js",
-    "main.js.map": "/netflix-year-in-review/static/js/main.b8429b07.chunk.js.map",
+    "main.css": "/netflix-year-in-review/static/css/main.8304b575.chunk.css",
+    "main.js": "/netflix-year-in-review/static/js/main.d1b8eb2d.chunk.js",
+    "main.js.map": "/netflix-year-in-review/static/js/main.d1b8eb2d.chunk.js.map",
     "runtime-main.js": "/netflix-year-in-review/static/js/runtime-main.189c6419.js",
     "runtime-main.js.map": "/netflix-year-in-review/static/js/runtime-main.189c6419.js.map",
     "static/css/2.20aa2d7b.chunk.css": "/netflix-year-in-review/static/css/2.20aa2d7b.chunk.css",
@@ -12,7 +12,7 @@
     "static/js/3.78252ffd.chunk.js.map": "/netflix-year-in-review/static/js/3.78252ffd.chunk.js.map",
     "index.html": "/netflix-year-in-review/index.html",
     "static/css/2.20aa2d7b.chunk.css.map": "/netflix-year-in-review/static/css/2.20aa2d7b.chunk.css.map",
-    "static/css/main.ccb4deb9.chunk.css.map": "/netflix-year-in-review/static/css/main.ccb4deb9.chunk.css.map",
+    "static/css/main.8304b575.chunk.css.map": "/netflix-year-in-review/static/css/main.8304b575.chunk.css.map",
     "static/js/2.74cf0a96.chunk.js.LICENSE.txt": "/netflix-year-in-review/static/js/2.74cf0a96.chunk.js.LICENSE.txt",
     "static/media/step1.abd23c8c.svg": "/netflix-year-in-review/static/media/step1.abd23c8c.svg",
     "static/media/step3.f82e6f03.svg": "/netflix-year-in-review/static/media/step3.f82e6f03.svg",
@@ -22,7 +22,7 @@
     "static/js/runtime-main.189c6419.js",
     "static/css/2.20aa2d7b.chunk.css",
     "static/js/2.74cf0a96.chunk.js",
-    "static/css/main.ccb4deb9.chunk.css",
-    "static/js/main.b8429b07.chunk.js"
+    "static/css/main.8304b575.chunk.css",
+    "static/js/main.d1b8eb2d.chunk.js"
   ]
 }
