@@ -4,6 +4,7 @@ import { faComments, faInfoCircle, faLink, faCloudUploadAlt } from '@fortawesome
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Modal from 'react-bootstrap/Modal'
 import NetflixLogo from 'Components/NetflixLogo'
 import step1 from './step1.svg'
 import step3 from './step3.svg'
@@ -13,9 +14,20 @@ type Props = {
   fileContentCallback: (content:string) => any,
 }
 
-export default class Landing extends React.Component<Props,{}> {
+interface State {
+  status: string,
+}
+
+export default class Landing extends React.Component<Props,State> {
+  state = {
+    status: "",
+  }
 
   uploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    this.setState({
+      status: "hahah..."
+    })
     const file = e.target.files?.[0]
     if(file) {
       const reader = new FileReader()
@@ -25,7 +37,27 @@ export default class Landing extends React.Component<Props,{}> {
           this.props.fileContentCallback(content.toString())
         }
       }
+      reader.onerror = (err) => {
+        this.setState({
+          status: err.toString(),
+        })
+      }
       reader.readAsText(file)
+      this.setState({
+        status: "Loading..."
+      })
+    }
+  }
+
+  getModal = () => {
+    if(this.state.status) {
+      return (
+        <Modal>
+          <Modal.Header>
+            <Modal.Title>{this.state.status}</Modal.Title>
+          </Modal.Header>
+        </Modal>
+      )
     }
   }
 
@@ -33,6 +65,8 @@ export default class Landing extends React.Component<Props,{}> {
   render() {
     return (
       <div id="landing">
+        {this.getModal()}
+
         <Container>
           <Row>
             <Col>
@@ -89,7 +123,8 @@ export default class Landing extends React.Component<Props,{}> {
                     <a href="https:///www.netflix.com/viewingactivity" target="_blank" rel="noopener noreferrer">
                       <div id="step2IconContainer">
                         <div id="step2Icon"><FontAwesomeIcon icon={faLink}/></div>
-                        <div>Netflix viewing activity URL</div>
+                        <div>Netflix viewing</div>
+                        <div>activity URL</div>
                       </div>
                     </a>
                   </div>

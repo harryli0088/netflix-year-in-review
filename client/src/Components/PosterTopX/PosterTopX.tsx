@@ -1,5 +1,11 @@
 import React from 'react'
 import memoize from 'memoize-one'
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faDownload, faShare } from '@fortawesome/free-solid-svg-icons'
+import shareApi from "utils/shareApi"
 import backgroundImageSrc from "./top5.jpg"
 import "./posterTopX.scss"
 
@@ -15,6 +21,7 @@ export type Props = PosterTopXRequiredProps
 interface State {
   backgroundImage: {height:number, width:number},
   posterImage: {height:number, width:number},
+  showShare: boolean,
 }
 
 
@@ -30,6 +37,7 @@ export default class PosterTopX extends React.Component<Props,{}> {
   state = {
     backgroundImage: {height:0, width:0},
     posterImage: {height:0, width:0},
+    showShare: navigator.share !== undefined,
   }
 
   componentDidMount() {
@@ -120,12 +128,49 @@ export default class PosterTopX extends React.Component<Props,{}> {
     }
   }
 
+  share = () => {
+    if(this.canvasRef.current) {
+      this.canvasRef.current.toBlob((blob) => {
+        if(blob) {
+          shareApi(blob)
+          // const dumb = async () => {
+          //   if(await shareApi(blob) === false) {
+          //     this.setState({showShare: true})
+          //   }
+          // }
+          //
+          // dumb()
+        }
+      })
+    }
+  }
+
+  showShare = () => {
+    if(this.state.showShare) {
+      return (
+        <button onClick={e => this.share()}>
+          <FontAwesomeIcon icon={faShare}/> Share
+        </button>
+      )
+    }
+  }
+
 
   render() {
     return (
       <div className="poster">
-        <canvas ref={this.canvasRef} width={this.state.backgroundImage.width} height={this.state.backgroundImage.height}/>
-        <button onClick={e => this.download()}>Download</button>
+        <Container>
+          <Row>
+            <Col>
+              <canvas ref={this.canvasRef} width={this.state.backgroundImage.width} height={this.state.backgroundImage.height}/>
+
+              <div>
+                <button onClick={e => this.download()}><FontAwesomeIcon icon={faDownload}/> Save Image</button>
+                {this.showShare()}
+              </div>
+            </Col>
+          </Row>
+        </Container>
       </div>
     )
   }

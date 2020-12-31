@@ -31,8 +31,7 @@
   #instructions {
     .stepContainer {
       display: flex;
-      padding-top: 0.5em;
-      padding-bottom: 0.5em;
+      padding-top: 1em;
 
       .step {
         width: 20%;
@@ -56,13 +55,20 @@
       }
 
       .stepIcon {
-        width: 25%;
+        margin-left: 5%;
+        width: 20%;
         display: flex;
         align-items: center;
+
+        img {
+          width: 100%;
+        }
       }
     }
 
-    a, a:visited {
+    a {
+      width: 100%;
+
       #step2IconContainer {
         color: white;
         text-decoration: none;
