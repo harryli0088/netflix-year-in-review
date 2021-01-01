@@ -129,7 +129,7 @@ export default class PosterTopX extends React.Component<Props,State> {
       const img = new Image()
       img.src = imgSrc
       img.setAttribute('crossorigin', 'anonymous')
-      // img.onload = () => {}
+      img.onload = () => this.forceUpdate()
 
       return img
     })
