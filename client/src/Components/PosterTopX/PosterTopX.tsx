@@ -4,7 +4,7 @@ import CustomContainer from 'Components/CustomContainer/CustomContainer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDownload, faShare } from '@fortawesome/free-solid-svg-icons'
 import shareApi from "utils/shareApi"
-import backgroundImageSrc from "./top5.jpg"
+import backgroundImageSrc from "./top5.png"
 import "./posterTopX.scss"
 
 const DPR = window.devicePixelRatio
@@ -24,11 +24,6 @@ interface State {
   showShare: boolean,
 }
 
-
-const EXPECTED_IMAGE_DIMENSIONS = {
-  height: 952,
-  width: 998,
-}
 
 export default class PosterTopX extends React.Component<Props,State> {
   canvas: HTMLCanvasElement
@@ -78,23 +73,17 @@ export default class PosterTopX extends React.Component<Props,State> {
       //crop a square from the image
       ctx.drawImage(
         this.getPosterImage(imgSrc),
-        (
-          align === "center"
-          ? (posterImage.width - posterImage.height) / 2
-          : posterImage.width - posterImage.height
-        ),
-        0,
-        Math.min(posterImage.width, posterImage.height),
-        Math.min(posterImage.width, posterImage.height),
-        0,
-        225,
-        EXPECTED_IMAGE_DIMENSIONS.width,
-        EXPECTED_IMAGE_DIMENSIONS.height,
+        8,
+        207,
+        1063,
+        598,
       )
 
-      ctx.font = '120px Bebas Neue'
-      ctx.fillStyle = "white";
-      ctx.fillText(this.props.titles[0], this.state.backgroundImage.width/3 - 100, this.state.backgroundImage.height*2/3 + 50)
+      ctx.font = '110px Bebas Neue'
+      ctx.fillStyle = "white"
+      ctx.textAlign = "center"
+      ctx.fillText(this.props.titles[0], 540, 920 , 1080)
+      //ctx.fillText(this.props.titles[0], this.state.backgroundImage.width/3 - 100, this.state.backgroundImage.height*2/3 + 50)
 
       ctx.font = '80px Bebas Neue'
       titles.slice(1).forEach((t,i) => {

@@ -4,7 +4,9 @@ import { faComments, faInfoCircle, faLink, faCloudUploadAlt } from '@fortawesome
 import CustomContainer from 'Components/CustomContainer/CustomContainer'
 import Modal from 'react-bootstrap/Modal'
 import NetflixLogo from 'Components/NetflixLogo'
+import example1 from './example1.png'
 import step1 from './step1.svg'
+import step2 from './step2.svg'
 import step3 from './step3.svg'
 import "./landing.scss"
 
@@ -84,64 +86,61 @@ export default class Landing extends React.Component<Props,State> {
 
           <section>
             <p><b>By Matthew Lau & Harry Li</b></p>
-            <p>Description in progress</p>
+            <p id="description">Inspired by  #SpotifyWrapped that subscribers get at the end of every  year, we wanted to create something similar for Netflix. We ar using the .csv viewing activity log from Netflix’s site with the help of “The Movie Database API”  As of January 1, 2020, we have created our first graphic in this project that shows your <b>Top 5 Shows of 2020</b>. Check it out!</p>
           </section>
 
           <section>
-            images
+            <div id="exampleImages">
+              <img src={example1} alt="example1"/>
+
+              <div id="moreComingSoon">MORE COMING SOON!</div>
+
+              <div></div>
+            </div>
           </section>
 
           <section id="instructions">
-            <p>INSTRUCTIONS:</p>
+            <p id="instructionsHeading">Instructions: it only takes 4 easy steps!</p>
 
             <div className="stepContainer">
+              <div className="stepIcon"><img src={step1} alt="step 1"/></div>
+
               <div className="stepContent">
                 <div className="stepTitle">1. LOG IN TO NETFLIX</div>
                 <p>If you are using a shared account, make sure you are logged into your specific profile</p>
               </div>
-
-              <div className="stepIcon"><img src={step1} alt="step 1"/></div>
             </div>
 
             <div className="stepContainer">
-              <div className="stepContent">
-                <div className="stepTitle">2. CLICK HERE</div>
-                <p>Links to official Netflix Viewing Activity log <a href="https:///www.netflix.com/viewingactivity" target="_blank" rel="noopener noreferrer">https:///www.netflix.com/viewingactivity</a></p>
-              </div>
-
               <div className="stepIcon">
                 <a href="https:///www.netflix.com/viewingactivity" target="_blank" rel="noopener noreferrer">
-                  <div id="step2IconContainer">
-                    <div id="step2Icon"><FontAwesomeIcon icon={faLink}/></div>
-                    <div>Netflix viewing</div>
-                    <div>activity URL</div>
-                  </div>
+                  <img src={step2} alt="step 2"/>
                 </a>
+              </div>
+
+              <div className="stepContent">
+                <div className="stepTitle">2. TAP HERE + HOLD --{">"} OPEN IN NEW TAB</div>
+                <p>
+                  <div>Links to official Netflix Activity Log (<a href="https:///www.netflix.com/viewingactivity" target="_blank" rel="noopener noreferrer">netflix.com/viewingactivity</a>)</div>
+                  <div>**if using a smartphone, tap and HOLD link -{">"} open in New Tab**</div>
+                </p>
               </div>
             </div>
 
             <div className="stepContainer">
+              <div className="stepIcon"><img src={step3} alt="step 3"/></div>
+
               <div className="stepContent">
                 <div className="stepTitle">3. Click "Download all"</div>
                 <p>Scroll all the way to the bottom of the page and click on "Download All"</p>
               </div>
-
-              <div className="stepIcon"><img src={step3} alt="step 3"/></div>
-            </div>
-
-            <div className="stepContainer">
-              <div className="stepContent">
-                <div className="stepTitle">4. UPLOAD .CSV FILE HERE</div>
-              </div>
-
-              <div className="stepIcon"></div>
             </div>
           </section>
 
           <section>
             <div id="uploadFileContainer">
               <label id="fileUploadButton" htmlFor="fileUpload">
-                Tap to Upload <FontAwesomeIcon icon={faCloudUploadAlt}/>
+                <FontAwesomeIcon icon={faCloudUploadAlt}/> &nbsp;&nbsp; 4. Tap to Upload
               </label>
               <input id="fileUpload" type="file" onChange={this.uploadFile} accept=".csv" hidden/>
             </div>
