@@ -2,6 +2,9 @@
  * this function dynamically fills text on canvas on multiple lines
  * since canvas does not have a built-in function to do this
  * NOTE this function will use the "width" param as an argument to the fillText "maxWidth" optional param
+ * Step 1: split "text" by any white space into an array of words
+ * Step 2: dynamically determine which words can be filled on which lines, like how browsers automatically wrap text in DIVs or Ps
+ * Step 3: fill each line as its own text and vertically space out each line
  * @param  ctx    canvas context
  * @param  text   text to fill
  * @param  x      desired bounding box x (top left corner)
@@ -20,9 +23,10 @@ export default function multilineFillText(
   ctx.save() //save the current context state so we don't mess anything after this function call
 
 
-  //calculations
-  const splitStrs = text.match(/\S+/g) //splitStrs by any white space
+  //Step 1
+  const splitStrs = text.match(/\S+/g) //split by any white space
 
+  //Step 2
   const lines:string[] = [] //eventually each element will be one line of text to fill
   let currentLine:string = "" //used to track the current line string
   let currentLineWidth:number = 0 //used to track the current line string pixel width
@@ -59,7 +63,7 @@ export default function multilineFillText(
 
 
 
-  //start drawing
+  //Step 3
   ctx.textBaseline = "middle"
 
   const heightInterval = height / (lines.length+1) //calculate how much vertical space each line can take up
