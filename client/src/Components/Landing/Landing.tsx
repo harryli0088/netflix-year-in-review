@@ -91,7 +91,7 @@ export default class Landing extends React.Component<Props,State> {
 
           <section>
             <div id="exampleImages">
-              <img src={example1} alt="example1"/>
+              <div className="aspectRatioContainer"><img src={example1} alt="example1"/></div>
 
               <div id="moreComingSoon">MORE COMING SOON!</div>
 
