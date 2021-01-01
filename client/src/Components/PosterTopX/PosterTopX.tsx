@@ -3,12 +3,20 @@ import memoize from 'memoize-one'
 import CustomContainer from 'Components/CustomContainer/CustomContainer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDownload, faShare } from '@fortawesome/free-solid-svg-icons'
+import multilineFillText from "utils/multilineFillText"
 import shareApi from "utils/shareApi"
-import backgroundImageSrc from "./top5.png"
+import backgroundImageSrc from "./top5.jpg"
 import no1 from "./no1.png"
 import "./posterTopX.scss"
 
-const DPR = window.devicePixelRatio
+// const DPR = window.devicePixelRatio
+const IMG_BOUNDS:{x:number, y:number, width:number, height:number}[] = [
+  {x: 8,   y: 207, width: 1063, height: 598},
+  {x: 8,   y: 980, width: 259, height: 382},
+  {x: 275, y: 980, width: 260, height: 383},
+  {x: 542, y: 979, width: 260, height: 383},
+  {x: 810, y: 980, width: 261, height: 382},
+]
 
 export type PosterTopXRequiredProps = {
   imgSrcs: string[],
@@ -71,17 +79,20 @@ export default class PosterTopX extends React.Component<Props,State> {
       ctx.drawImage(this.getBackgroundImage(backgroundImageSrc), 0, 0)
 
       const imgs = this.getImages(imgSrcs)
-      ctx.drawImage(imgs[0], 8, 207, 1063, 598)
-      ctx.drawImage(this.getNo1Image(no1), 30, 207)
-
-      ctx.drawImage(imgs[1], 8,   980, 259, 382)
-      ctx.drawImage(imgs[2], 275, 980, 260, 382)
-      ctx.drawImage(imgs[3], 542, 979, 260, 383)
-      ctx.drawImage(imgs[4], 810, 980, 261, 382)
-
-      ctx.font = '110px Bebas Neue'
+      ctx.font = '150px Bebas Neue'
       ctx.fillStyle = "white"
       ctx.textAlign = "center"
+      multilineFillText(ctx, titles[0], IMG_BOUNDS[0].x, IMG_BOUNDS[0].y, IMG_BOUNDS[0].width, IMG_BOUNDS[0].height)
+      // ctx.drawImage(imgs[0], IMG_BOUNDS[0].x, IMG_BOUNDS[0].y, IMG_BOUNDS[0].width, IMG_BOUNDS[0].height)
+      ctx.drawImage(this.getNo1Image(no1), 30, 207)
+
+      ctx.font = '60px Bebas Neue'
+      IMG_BOUNDS.slice(1).forEach((bounds,i) => {
+        multilineFillText(ctx, titles[i+1], bounds.x, bounds.y, bounds.width, bounds.height)
+        // ctx.drawImage(imgs[i+1], bounds.x, bounds.y, bounds.width, bounds.height)
+      })
+
+      ctx.font = '110px Bebas Neue'
       ctx.fillText(titles[0], 540, 920 , 1080)
       //ctx.fillText(this.props.titles[0], this.state.backgroundImage.width/3 - 100, this.state.backgroundImage.height*2/3 + 50)
 
