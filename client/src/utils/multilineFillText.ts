@@ -21,31 +21,30 @@ export default function multilineFillText(
 
 
   //calculations
-  const split = text.match(/\S+/g) //split by any white space
+  const splitStrs = text.match(/\S+/g) //splitStrs by any white space
 
   const lines:string[] = [] //eventually each element will be one line of text to fill
-  //track current line data
-  let currentLine:string = ""
-  let currentLineWidth:number = 0
-  if(split) {
-    let currentStrIndex = 0
-    while(split[currentStrIndex]) {
-      const str = split[currentStrIndex]
-      const currentStr = currentLine==="" ? str : " "+str
-      const strWidth = ctx.measureText(currentStr).width
+  let currentLine:string = "" //used to track the current line string
+  let currentLineWidth:number = 0 //used to track the current line string pixel width
+  if(splitStrs) { //if splitStrs is valid
+    let currentStrIndex = 0 //start at the first str
+    while(splitStrs[currentStrIndex]) { //while there are still strs to look at
+      const str = splitStrs[currentStrIndex] //get the current str
+      const appendStr = currentLine === "" ? str : " "+str //get the string that would be appeneded to the currentLine
+      const appendStrWidth = ctx.measureText(appendStr).width //calculate the width of the appendStr
 
-      //if the current line plus this str is short enough for one line
-      if(currentLineWidth + strWidth <= width) {
-        currentLine += currentStr //add the string to the line
-        currentLineWidth += strWidth //update the line width
+      //if the current line plus this appendStr is short enough for one line
+      if(currentLineWidth + appendStrWidth <= width) {
+        currentLine += appendStr //append the string to the line
+        currentLineWidth += appendStrWidth //update the line width
         ++currentStrIndex //move to the next str
       }
       else { //else we need to make a new line
         if(currentLine) { //if there is a previous current line
           lines.push(currentLine) //push this line
         }
-        else { //else this str will be one a line by itself
-          lines.push(str) //push this str
+        else { //else this str is too long and will be on a line by itself
+          lines.push(str) //push this str as its own line
           ++currentStrIndex //move to the next str
         }
 
@@ -55,7 +54,7 @@ export default function multilineFillText(
       }
     }
 
-    if(currentLine) lines.push(currentLine)
+    if(currentLine) lines.push(currentLine) //if there is a remaining currentLine, push it
   }
 
 
