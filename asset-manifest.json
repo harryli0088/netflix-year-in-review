@@ -1,28 +1,28 @@
 {
   "files": {
-    "main.css": "/netflix-year-in-review/static/css/main.8008c86a.chunk.css",
-    "main.js": "/netflix-year-in-review/static/js/main.249dbf2b.chunk.js",
-    "main.js.map": "/netflix-year-in-review/static/js/main.249dbf2b.chunk.js.map",
-    "runtime-main.js": "/netflix-year-in-review/static/js/runtime-main.189c6419.js",
-    "runtime-main.js.map": "/netflix-year-in-review/static/js/runtime-main.189c6419.js.map",
-    "static/css/2.20aa2d7b.chunk.css": "/netflix-year-in-review/static/css/2.20aa2d7b.chunk.css",
-    "static/js/2.74cf0a96.chunk.js": "/netflix-year-in-review/static/js/2.74cf0a96.chunk.js",
-    "static/js/2.74cf0a96.chunk.js.map": "/netflix-year-in-review/static/js/2.74cf0a96.chunk.js.map",
-    "static/js/3.78252ffd.chunk.js": "/netflix-year-in-review/static/js/3.78252ffd.chunk.js",
-    "static/js/3.78252ffd.chunk.js.map": "/netflix-year-in-review/static/js/3.78252ffd.chunk.js.map",
-    "index.html": "/netflix-year-in-review/index.html",
-    "static/css/2.20aa2d7b.chunk.css.map": "/netflix-year-in-review/static/css/2.20aa2d7b.chunk.css.map",
-    "static/css/main.8008c86a.chunk.css.map": "/netflix-year-in-review/static/css/main.8008c86a.chunk.css.map",
-    "static/js/2.74cf0a96.chunk.js.LICENSE.txt": "/netflix-year-in-review/static/js/2.74cf0a96.chunk.js.LICENSE.txt",
-    "static/media/step1.abd23c8c.svg": "/netflix-year-in-review/static/media/step1.abd23c8c.svg",
-    "static/media/step3.f82e6f03.svg": "/netflix-year-in-review/static/media/step3.f82e6f03.svg",
-    "static/media/top5.6ba5dd6b.jpg": "/netflix-year-in-review/static/media/top5.6ba5dd6b.jpg"
+    "main.css": "/static/css/main.7a4a21e0.chunk.css",
+    "main.js": "/static/js/main.a3a56f69.chunk.js",
+    "main.js.map": "/static/js/main.a3a56f69.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.b74f6c69.js",
+    "runtime-main.js.map": "/static/js/runtime-main.b74f6c69.js.map",
+    "static/css/2.20aa2d7b.chunk.css": "/static/css/2.20aa2d7b.chunk.css",
+    "static/js/2.74cf0a96.chunk.js": "/static/js/2.74cf0a96.chunk.js",
+    "static/js/2.74cf0a96.chunk.js.map": "/static/js/2.74cf0a96.chunk.js.map",
+    "static/js/3.78252ffd.chunk.js": "/static/js/3.78252ffd.chunk.js",
+    "static/js/3.78252ffd.chunk.js.map": "/static/js/3.78252ffd.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/2.20aa2d7b.chunk.css.map": "/static/css/2.20aa2d7b.chunk.css.map",
+    "static/css/main.7a4a21e0.chunk.css.map": "/static/css/main.7a4a21e0.chunk.css.map",
+    "static/js/2.74cf0a96.chunk.js.LICENSE.txt": "/static/js/2.74cf0a96.chunk.js.LICENSE.txt",
+    "static/media/step1.abd23c8c.svg": "/static/media/step1.abd23c8c.svg",
+    "static/media/step3.f82e6f03.svg": "/static/media/step3.f82e6f03.svg",
+    "static/media/top5.6ba5dd6b.jpg": "/static/media/top5.6ba5dd6b.jpg"
   },
   "entrypoints": [
-    "static/js/runtime-main.189c6419.js",
+    "static/js/runtime-main.b74f6c69.js",
     "static/css/2.20aa2d7b.chunk.css",
     "static/js/2.74cf0a96.chunk.js",
-    "static/css/main.8008c86a.chunk.css",
-    "static/js/main.249dbf2b.chunk.js"
+    "static/css/main.7a4a21e0.chunk.css",
+    "static/js/main.a3a56f69.chunk.js"
   ]
 }
