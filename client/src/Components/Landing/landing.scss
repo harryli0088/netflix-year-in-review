@@ -36,8 +36,6 @@
     padding: 1em;
     display: flex;
     justify-content: space-between;
-    margin-left: -1em;
-    margin-right: -1em;
 
     > * {
       width: calc(calc(100% - 2em) / 3);
@@ -58,8 +56,6 @@
   }
 
   #instructions {
-    margin-left: -1em;
-    margin-right: -1em;
     font-weight: bold;
 
     #instructionsHeading {
@@ -104,6 +100,9 @@
   }
 
   #uploadFileContainer {
+    padding-left: 1em;
+    padding-right: 1em;
+    
     #fileUploadButton {
       background: #333;
       border: 1px solid white;
