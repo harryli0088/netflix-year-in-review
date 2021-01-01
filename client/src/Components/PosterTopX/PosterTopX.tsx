@@ -9,7 +9,7 @@ import backgroundImageSrc from "./top5.jpg"
 import no1 from "./no1.png"
 import "./posterTopX.scss"
 
-// const DPR = window.devicePixelRatio
+
 const IMG_BOUNDS:{x:number, y:number, width:number, height:number}[] = [
   {x: 8,   y: 207, width: 1063, height: 598},
   {x: 8,   y: 980, width: 259, height: 382},
@@ -74,28 +74,28 @@ export default class PosterTopX extends React.Component<Props,State> {
       this.canvas.height = backgroundImage.height
 
       ctx.save()
-      // ctx.scale(DPR, DPR)
 
-      ctx.drawImage(this.getBackgroundImage(backgroundImageSrc), 0, 0)
+      ctx.drawImage(this.getBackgroundImage(backgroundImageSrc), 0, 0) //background image
 
       const imgs = this.getImages(imgSrcs)
       ctx.font = '150px Bebas Neue'
       ctx.fillStyle = "white"
       ctx.textAlign = "center"
-      multilineFillText(ctx, titles[0], IMG_BOUNDS[0].x, IMG_BOUNDS[0].y, IMG_BOUNDS[0].width, IMG_BOUNDS[0].height)
-      // ctx.drawImage(imgs[0], IMG_BOUNDS[0].x, IMG_BOUNDS[0].y, IMG_BOUNDS[0].width, IMG_BOUNDS[0].height)
-      ctx.drawImage(this.getNo1Image(no1), 30, 207)
+      multilineFillText(ctx, titles[0], IMG_BOUNDS[0].x, IMG_BOUNDS[0].y, IMG_BOUNDS[0].width, IMG_BOUNDS[0].height) //alt text
+      ctx.drawImage(imgs[0], IMG_BOUNDS[0].x, IMG_BOUNDS[0].y, IMG_BOUNDS[0].width, IMG_BOUNDS[0].height) //main image
+      ctx.drawImage(this.getNo1Image(no1), 30, 207) //red #1 overlay
 
       ctx.font = '60px Bebas Neue'
       IMG_BOUNDS.slice(1).forEach((bounds,i) => {
-        multilineFillText(ctx, titles[i+1], bounds.x, bounds.y, bounds.width, bounds.height)
-        // ctx.drawImage(imgs[i+1], bounds.x, bounds.y, bounds.width, bounds.height)
+        multilineFillText(ctx, titles[i+1], bounds.x, bounds.y, bounds.width, bounds.height) //alt text
+        ctx.drawImage(imgs[i+1], bounds.x, bounds.y, bounds.width, bounds.height) //poster img
       })
 
+      //main title
       ctx.font = '110px Bebas Neue'
       ctx.fillText(titles[0], 540, 920 , 1080)
-      //ctx.fillText(this.props.titles[0], this.state.backgroundImage.width/3 - 100, this.state.backgroundImage.height*2/3 + 50)
 
+      //2-5 show titles
       ctx.font = '72px Bebas Neue'
       ctx.textAlign = "left"
       ctx.fillText(titles[1], 149, 1450, 900)
@@ -105,6 +105,7 @@ export default class PosterTopX extends React.Component<Props,State> {
 
       ctx.restore()
 
+      //set the source of the image in the DOM
       if(this.imgRef.current) {
         this.imgRef.current.src = this.canvas.toDataURL("image/png")
       }
