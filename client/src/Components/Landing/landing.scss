@@ -11,10 +11,20 @@
     .navIconContainer {
       width: 25%;
       font-size: 9px;
+      cursor: pointer;
 
       .navIcon {
         font-size: 2em;
       }
+
+      a {
+        color: white;
+      }
+    }
+
+    #designDevelopmentContainer {
+      color: #777;
+      cursor: not-allowed;
     }
   }
 

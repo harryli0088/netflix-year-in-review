@@ -184,14 +184,18 @@ export default class PosterTopX extends React.Component<Props,State> {
     return (
       <CustomContainer>
         <div className="poster">
-            <img ref={this.imgRef} alt="Loading..."/>
+          <img ref={this.imgRef} alt="Loading..."/>
 
-            <br/>
+          <br/><br/>
 
-            <div>
-              <button onClick={e => this.download()}><FontAwesomeIcon icon={faDownload}/> Save Image</button>
-              {this.showShare()}
-            </div>
+          {/* <div>
+            <button onClick={e => this.download()}><FontAwesomeIcon icon={faDownload}/> Save Image</button>
+            {this.showShare()}
+          </div> */}
+
+          <p>Save & Share on your social media with <b>#nyir2020</b>!</p>
+          <p className="mobileOnly">(To Save Image, Tap + Hold)</p>
+          <p className="desktopOnly">(To Save Image, Right Click -{">"} Save As...)</p>
         </div>
       </CustomContainer>
     )

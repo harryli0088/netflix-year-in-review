@@ -68,14 +68,16 @@ export default class Landing extends React.Component<Props,State> {
         <CustomContainer>
           <header>
             <div className="navIconContainer">
-              <div className="navIcon">
-                <FontAwesomeIcon icon={faComments}/>
-              </div>
-              <div>Feedback</div>
-              <div>Survey</div>
+              <a href="https://forms.gle/jKkPwzi5KPDgYaNC8" target="_blank" rel="noopener noreferrer">
+                <div className="navIcon">
+                  <FontAwesomeIcon icon={faComments}/>
+                </div>
+                <div>Feedback</div>
+                <div>Survey</div>
+              </a>
             </div>
             <NetflixLogo/>
-            <div className="navIconContainer">
+            <div id="designDevelopmentContainer" className="navIconContainer">
               <div className="navIcon">
                 <FontAwesomeIcon icon={faInfoCircle}/>
               </div>

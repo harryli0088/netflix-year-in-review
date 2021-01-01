@@ -52,9 +52,9 @@ class App extends React.Component<{},State> {
   }
 
   componentDidMount() {
-    // if(process.env.NODE_ENV === "development") {
-    //   this.fetchCsv()
-    // }
+    if(process.env.NODE_ENV === "development") {
+      this.fetchCsv()
+    }
     fetch(`${SERVER_URL}/`)
   }
 
