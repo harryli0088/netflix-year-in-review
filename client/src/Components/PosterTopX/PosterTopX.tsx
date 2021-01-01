@@ -5,13 +5,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDownload, faShare } from '@fortawesome/free-solid-svg-icons'
 import shareApi from "utils/shareApi"
 import backgroundImageSrc from "./top5.png"
+import no1 from "./no1.png"
 import "./posterTopX.scss"
 
 const DPR = window.devicePixelRatio
 
 export type PosterTopXRequiredProps = {
-  align: string,
-  imgSrc: string,
+  imgSrcs: string[],
   titles: string[],
   year: number,
 }
@@ -29,6 +29,7 @@ export default class PosterTopX extends React.Component<Props,State> {
   canvas: HTMLCanvasElement
   ctx: CanvasRenderingContext2D | null
   imgRef: React.RefObject<HTMLImageElement> = React.createRef()
+  images: HTMLImageElement[] = []
 
   constructor(props:Props) {
     super(props)
@@ -49,8 +50,7 @@ export default class PosterTopX extends React.Component<Props,State> {
 
   componentDidUpdate = () => {
     const {
-      align,
-      imgSrc,
+      imgSrcs,
       titles,
       year,
     } = this.props
@@ -70,27 +70,27 @@ export default class PosterTopX extends React.Component<Props,State> {
 
       ctx.drawImage(this.getBackgroundImage(backgroundImageSrc), 0, 0)
 
-      //crop a square from the image
-      ctx.drawImage(
-        this.getPosterImage(imgSrc),
-        8,
-        207,
-        1063,
-        598,
-      )
+      const imgs = this.getImages(imgSrcs)
+      ctx.drawImage(imgs[0], 8, 207, 1063, 598)
+      ctx.drawImage(this.getNo1Image(no1), 30, 207)
+
+      ctx.drawImage(imgs[1], 8,   980, 259, 382)
+      ctx.drawImage(imgs[2], 275, 980, 260, 382)
+      ctx.drawImage(imgs[3], 542, 979, 260, 383)
+      ctx.drawImage(imgs[4], 810, 980, 261, 382)
 
       ctx.font = '110px Bebas Neue'
       ctx.fillStyle = "white"
       ctx.textAlign = "center"
-      ctx.fillText(this.props.titles[0], 540, 920 , 1080)
+      ctx.fillText(titles[0], 540, 920 , 1080)
       //ctx.fillText(this.props.titles[0], this.state.backgroundImage.width/3 - 100, this.state.backgroundImage.height*2/3 + 50)
 
-      ctx.font = '80px Bebas Neue'
-      titles.slice(1).forEach((t,i) => {
-        if(ctx) {
-          ctx.fillText(t, this.state.backgroundImage.width/3 - 100, this.state.backgroundImage.height*2/3 + 175 + 89*i)
-        }
-      })
+      ctx.font = '72px Bebas Neue'
+      ctx.textAlign = "left"
+      ctx.fillText(titles[1], 149, 1450, 900)
+      ctx.fillText(titles[2], 163, 1540, 900)
+      ctx.fillText(titles[3], 182, 1630, 900)
+      ctx.fillText(titles[4], 198, 1720, 900)
 
       ctx.restore()
 
@@ -113,17 +113,26 @@ export default class PosterTopX extends React.Component<Props,State> {
     }
   )
 
-  getPosterImage = memoize(
+  getNo1Image = memoize(
     (imgSrc: string) => {
       const img = new Image()
       img.src = imgSrc
       img.setAttribute('crossorigin', 'anonymous')
-      img.onload = () => this.setState({
-        posterImage: {height: img.height, width: img.width}
-      })
+      img.onload = () => this.forceUpdate()
 
       return img
     }
+  )
+
+  getImages = memoize(
+    (imgSrcs: string[]) => imgSrcs.map((imgSrc) => {
+      const img = new Image()
+      img.src = imgSrc
+      img.setAttribute('crossorigin', 'anonymous')
+      // img.onload = () => {}
+
+      return img
+    })
   )
 
   download = () => {

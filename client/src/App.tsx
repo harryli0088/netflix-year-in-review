@@ -48,7 +48,7 @@ class App extends React.Component<{},State> {
     errors: [],
     status: "",
     titleYearMap: new Map(),
-    topXData: { align: "", imgSrc: "", titles: [], year: 0 }
+    topXData: { imgSrcs: [], titles: [], year: 0 }
   }
 
   componentDidMount() {
@@ -104,7 +104,11 @@ class App extends React.Component<{},State> {
         const titles = serieData.slice(0, TOP_X).map(d => d[0])
         this.setState({
           topXData: {
-            ...await this.getImgSrcFromTitle(titles[0]),
+            imgSrcs: await Promise.all(
+              titles.map((t,i) =>
+                this.getImgSrcFromTitle(t, i===0)
+              )
+            ),
             titles,
             year: YEAR,
           }
@@ -114,7 +118,7 @@ class App extends React.Component<{},State> {
   )
 
   getImgSrcFromTitle = memoize(
-    async (title:string) => {
+    async (title:string, useBackdropPath:boolean) => {
       // try {
       //   //try to get the top node id
       //   const topNodeId = parseInt(
@@ -124,10 +128,7 @@ class App extends React.Component<{},State> {
       //   //if the top node id is valid
       //   if(!isNaN(topNodeId)) {
       //     const data:TVSeriesType = await fetch(`${SERVER_URL}/title/${topNodeId}`).then(response => response.json())
-      //     return {
-      //       align: "right",
-      //       imgSrc: data.image,
-      //     }
+      //     return data.image,
       //   }
       //   else {
       //     throw new Error(`No top node id returned for ${title}`)
@@ -141,19 +142,17 @@ class App extends React.Component<{},State> {
       try {
         const data = await fetch(`${SERVER_URL}/tmdbInfo/${title}`).then(response => response.json())
         console.log(data)
-        const imgSrc = `https://image.tmdb.org/t/p/original/${data.results[0].backdrop_path}`
+        const path = useBackdropPath ? data.results[0].backdrop_path : data.results[0].poster_path
+        const imgSrc = `https://image.tmdb.org/t/p/original/${path}`
         console.log(imgSrc)
-        return {
-          align: "center",
-          imgSrc,
-        }
+        return imgSrc
       }
       catch(err) {
         console.error(err)
       }
 
       //we didn't find any valid images
-      return {align:"",imgSrc:""}
+      return ""
     }
   )
 
@@ -163,7 +162,7 @@ class App extends React.Component<{},State> {
 
 
   renderContent = () => {
-    if(this.state.topXData.imgSrc) {
+    if(this.state.topXData.imgSrcs.length > 0) {
       return (
         <div>
           <PosterTopX
