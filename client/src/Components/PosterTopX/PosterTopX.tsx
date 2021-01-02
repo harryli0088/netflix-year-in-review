@@ -27,7 +27,7 @@ export type PosterTopXRequiredProps = {
 export type Props = PosterTopXRequiredProps
 
 interface State {
-  backgroundImage: {height:number, width:number},
+  backgroundImgDims: {height:number, width:number},
   posterImage: {height:number, width:number},
   showShare: boolean,
 }
@@ -43,7 +43,7 @@ export default class PosterTopX extends React.Component<Props,State> {
     super(props)
 
     this.state = {
-      backgroundImage: {height:0, width:0},
+      backgroundImgDims: {height:0, width:0},
       posterImage: {height:0, width:0},
       showShare: navigator.share !== undefined,
     }
@@ -64,50 +64,67 @@ export default class PosterTopX extends React.Component<Props,State> {
     } = this.props
 
     const {
-      backgroundImage,
+      backgroundImgDims,
       posterImage,
     } = this.state
 
     const ctx = this.ctx
-    if(ctx) {
-      this.canvas.width = backgroundImage.width
-      this.canvas.height = backgroundImage.height
+    const backgroundImg = this.getBackgroundImage(backgroundImageSrc)
+    const imgs = this.getImages(imgSrcs)
+    if(
+      ctx
+      && backgroundImgDims.width > 0
+      && backgroundImgDims.height > 0
+    ) {
+      try {
+        console.log(JSON.parse(JSON.stringify(backgroundImgDims)))
+        this.canvas.width = backgroundImgDims.width
+        this.canvas.height = backgroundImgDims.height
 
-      ctx.save()
+        ctx.save()
 
-      ctx.drawImage(this.getBackgroundImage(backgroundImageSrc), 0, 0) //background image
+        ctx.drawImage(backgroundImg, 0, 0) //background image
 
-      const imgs = this.getImages(imgSrcs)
-      ctx.font = '150px Bebas Neue'
-      ctx.fillStyle = "white"
-      ctx.textAlign = "center"
-      multilineFillText(ctx, titles[0], IMG_BOUNDS[0].x, IMG_BOUNDS[0].y, IMG_BOUNDS[0].width, IMG_BOUNDS[0].height) //alt text
-      ctx.drawImage(imgs[0], IMG_BOUNDS[0].x, IMG_BOUNDS[0].y, IMG_BOUNDS[0].width, IMG_BOUNDS[0].height) //main image
-      ctx.drawImage(this.getNo1Image(no1), 30, 207) //red #1 overlay
+        ctx.font = '150px Bebas Neue'
+        ctx.fillStyle = "white"
+        ctx.textAlign = "center"
+        multilineFillText(ctx, titles[0], IMG_BOUNDS[0].x, IMG_BOUNDS[0].y, IMG_BOUNDS[0].width, IMG_BOUNDS[0].height) //alt text
+        ctx.drawImage(
+          imgs[0],
+          IMG_BOUNDS[0].x,
+          IMG_BOUNDS[0].y,
+          IMG_BOUNDS[0].width,
+          IMG_BOUNDS[0].height,
+        ) //main image
+        ctx.drawImage(this.getNo1Image(no1), 30, 207) //red #1 overlay
 
-      ctx.font = '60px Bebas Neue'
-      IMG_BOUNDS.slice(1).forEach((bounds,i) => {
-        multilineFillText(ctx, titles[i+1], bounds.x, bounds.y, bounds.width, bounds.height) //alt text
-        ctx.drawImage(imgs[i+1], bounds.x, bounds.y, bounds.width, bounds.height) //poster img
-      })
+        ctx.font = '60px Bebas Neue'
+        IMG_BOUNDS.slice(1).forEach((bounds,i) => {
+          multilineFillText(ctx, titles[i+1], bounds.x, bounds.y, bounds.width, bounds.height) //alt text
+          ctx.drawImage(imgs[i+1], bounds.x, bounds.y, bounds.width, bounds.height) //poster img
+        })
 
-      //main title
-      ctx.font = '110px Bebas Neue'
-      ctx.fillText(titles[0], 540, 920 , 1080)
+        //main title
+        ctx.font = '110px Bebas Neue'
+        ctx.fillText(titles[0], 540, 920 , 1080)
 
-      //2-5 show titles
-      ctx.font = '72px Bebas Neue'
-      ctx.textAlign = "left"
-      ctx.fillText(titles[1], 149, 1450, 900)
-      ctx.fillText(titles[2], 163, 1540, 900)
-      ctx.fillText(titles[3], 182, 1630, 900)
-      ctx.fillText(titles[4], 198, 1720, 900)
+        //2-5 show titles
+        ctx.font = '72px Bebas Neue'
+        ctx.textAlign = "left"
+        ctx.fillText(titles[1], 149, 1450, 900)
+        ctx.fillText(titles[2], 163, 1540, 900)
+        ctx.fillText(titles[3], 182, 1630, 900)
+        ctx.fillText(titles[4], 198, 1720, 900)
 
-      ctx.restore()
+        ctx.restore()
 
-      //set the source of the image in the DOM
-      if(this.imgRef.current) {
-        this.imgRef.current.src = this.canvas.toDataURL("image/png")
+        //set the source of the image in the DOM
+        if(this.imgRef.current) {
+          this.imgRef.current.src = this.canvas.toDataURL("image/png")
+        }
+      }
+      catch(err) {
+        console.error(err)
       }
     }
   }
@@ -118,7 +135,7 @@ export default class PosterTopX extends React.Component<Props,State> {
       img.src = imgSrc
       img.setAttribute('crossorigin', 'anonymous')
       img.onload = () => this.setState({
-        backgroundImage: {height: img.height, width: img.width}
+        backgroundImgDims: {height: img.height, width: img.width}
       })
 
       return img
@@ -185,7 +202,6 @@ export default class PosterTopX extends React.Component<Props,State> {
       <CustomContainer>
         <div className="poster">
           <img ref={this.imgRef} alt="Loading..."/>
-
           <br/><br/>
 
           {/* <div>

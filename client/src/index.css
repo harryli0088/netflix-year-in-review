@@ -10,6 +10,10 @@ body {
   font-style: normal;
   letter-spacing: 1.5px;
   text-align: left;
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  color: white;
 }
 
 code {
