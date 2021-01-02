@@ -1,6 +1,6 @@
 import React from 'react'
 import memoize from 'memoize-one'
-import Modal from 'react-bootstrap/Modal'
+import CustomModal from 'Components/CustomModal/CustomModal'
 import Landing from 'Components/Landing/Landing'
 import PosterTopX, { PosterTopXRequiredProps } from 'Components/PosterTopX/PosterTopX'
 import { SERVER_URL, TOP_X, YEAR } from "consts"
@@ -46,17 +46,17 @@ interface State {
 
 class App extends React.Component<{},State> {
   state:State = {
-    canCloseModal: false,
+    canCloseModal: true,
     csvData: [],
     errors: [],
-    status: "",
+    status: ";aa;a;a;a;a; ",
     yearDataMap: new Map(),
     topXData: { imgSrcs: [], titles: [], year: 0 }
   }
 
   componentDidMount() {
     if(process.env.NODE_ENV === "development") {
-      this.fetchCsv()
+      // this.fetchCsv()
     }
     fetch(`${SERVER_URL}/`)
   }
@@ -151,11 +151,12 @@ class App extends React.Component<{},State> {
   render() {
     return (
       <div className="App">
-        <Modal centered show={this.state.status.length > 0}>
-          <Modal.Header closeButton={this.state.canCloseModal}>
-            <Modal.Title style={{color: "black"}}>{this.state.status}</Modal.Title>
-          </Modal.Header>
-        </Modal>
+        <CustomModal
+          close={() => this.setStatus("",false)}
+          closeButton={this.state.canCloseModal}
+          show={this.state.status.length > 0}
+          content={this.state.status}
+        />
 
         {this.renderContent()}
       </div>
