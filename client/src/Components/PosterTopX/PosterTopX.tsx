@@ -71,17 +71,11 @@ export default class PosterTopX extends React.Component<Props,State> {
     const ctx = this.ctx
     const backgroundImg = this.getBackgroundImage(backgroundImageSrc)
     const imgs = this.getImages(imgSrcs)
-    if(
-      ctx
-      && backgroundImgDims.width > 0
-      && backgroundImgDims.height > 0
-    ) {
-      try {
-        console.log(JSON.parse(JSON.stringify(backgroundImgDims)))
+    if(ctx) {
+      ctx.save()
+      if(backgroundImgDims.width > 0 && backgroundImgDims.height > 0) {
         this.canvas.width = backgroundImgDims.width
         this.canvas.height = backgroundImgDims.height
-
-        ctx.save()
 
         ctx.drawImage(backgroundImg, 0, 0) //background image
 
@@ -115,16 +109,22 @@ export default class PosterTopX extends React.Component<Props,State> {
         ctx.fillText(titles[2], 163, 1540, 900)
         ctx.fillText(titles[3], 182, 1630, 900)
         ctx.fillText(titles[4], 198, 1720, 900)
-
-        ctx.restore()
-
-        //set the source of the image in the DOM
-        if(this.imgRef.current) {
-          this.imgRef.current.src = this.canvas.toDataURL("image/png")
-        }
       }
-      catch(err) {
-        console.error(err)
+      else {
+        this.canvas.width = 1080
+        this.canvas.height = 1920
+
+        ctx.fillStyle = "white"
+        ctx.font = '60px Bebas Neue'
+        ctx.textAlign = "center"
+        ctx.textBaseline = "middle"
+        ctx.fillText("Loading...", 540, 300)
+      }
+      ctx.restore()
+
+      //set the source of the image in the DOM
+      if(this.imgRef.current) {
+        this.imgRef.current.src = this.canvas.toDataURL("image/png")
       }
     }
   }
