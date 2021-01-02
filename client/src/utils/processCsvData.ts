@@ -27,7 +27,7 @@ export default function processCsvData(rows: CsvDataType[]) {
       //try to determine if this is a tv series
       const index = indexOfMultiple(
         row.Title,
-        [": Season",": Volume",": Series",": Collection"], //see if the title contains any of these substrings
+        [": Season",": Volume",": Series",": Collection", ":"], //see if the title contains any of these substrings
       )
 
       const typeKey = index === -1 ? "movie" : "serie"

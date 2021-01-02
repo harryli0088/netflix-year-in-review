@@ -100,13 +100,13 @@ export default class PosterTopX extends React.Component<Props,State> {
 
         ctx.font = '60px Bebas Neue'
         IMG_BOUNDS.slice(1).forEach((bounds,i) => {
-          multilineFillText(ctx, titles[i+1], bounds.x, bounds.y, bounds.width, bounds.height) //alt text
+          multilineFillText(ctx, titles[i+1], bounds.x+10, bounds.y+5, bounds.width-20, bounds.height-10) //alt text
           ctx.drawImage(imgs[i+1], bounds.x, bounds.y, bounds.width, bounds.height) //poster img
         })
 
         //main title
         ctx.font = '110px Bebas Neue'
-        ctx.fillText(titles[0], 540, 920 , 1080)
+        ctx.fillText(titles[0],540, 920,1040) //1040 adds some padding on both sides
 
         //2-5 show titles
         ctx.font = '72px Bebas Neue'

@@ -52,9 +52,9 @@ class App extends React.Component<{},State> {
   }
 
   componentDidMount() {
-    // if(process.env.NODE_ENV === "development") {
-    //   this.fetchCsv()
-    // }
+    if(process.env.NODE_ENV === "development") {
+      this.fetchCsv()
+    }
     fetch(`${SERVER_URL}/`)
   }
 
@@ -100,6 +100,7 @@ class App extends React.Component<{},State> {
             return 1
           }
         )
+        console.log(serieData)
 
         const titles = serieData.slice(0, TOP_X).map(d => d[0])
         this.setState({
