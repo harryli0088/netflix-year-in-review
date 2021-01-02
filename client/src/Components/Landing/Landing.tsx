@@ -25,35 +25,44 @@ export default class Landing extends React.Component<Props,State> {
 
   uploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
-    this.setState({
-      status: "hahah..."
-    })
     const file = e.target.files?.[0]
-    if(file) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const content = e?.target?.result
-        if(content) {
-          this.props.fileContentCallback(content.toString())
+    if(file) { //if the file exists
+      if(file.name.slice(file.name.length-4, file.name.length) === ".csv") { //if the file has a .csv extension
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          const content = e?.target?.result
+          if(content) {
+            this.props.fileContentCallback(content.toString())
+          }
         }
-      }
-      reader.onerror = (err) => {
+        reader.onerror = (err) => {
+          this.setState({
+            status: err.toString(),
+          })
+        }
+        reader.readAsText(file)
         this.setState({
-          status: err.toString(),
+          status: "Loading..."
         })
       }
-      reader.readAsText(file)
+      else {
+        this.setState({
+          status: "You must upload a .csv file"
+        })
+      }
+    }
+    else {
       this.setState({
-        status: "Loading..."
+        status: "No file was uploaded..."
       })
     }
   }
 
   getModal = () => {
     return (
-      <Modal show={this.state.status.length > 0}>
+      <Modal centered show={this.state.status.length > 0}>
         <Modal.Header>
-          <Modal.Title>{this.state.status}</Modal.Title>
+          <Modal.Title style={{color: "black"}}>{this.state.status}</Modal.Title>
         </Modal.Header>
       </Modal>
     )
