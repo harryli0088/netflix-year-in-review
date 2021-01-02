@@ -2,7 +2,6 @@ import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faComments, faInfoCircle, faLink, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons'
 import CustomContainer from 'Components/CustomContainer/CustomContainer'
-import Modal from 'react-bootstrap/Modal'
 import NetflixLogo from 'Components/NetflixLogo/NetflixLogo'
 import example1 from './example1.png'
 import step1 from './step1.svg'
@@ -12,17 +11,13 @@ import "./landing.scss"
 
 type Props = {
   fileContentCallback: (content:string) => any,
+  setStatus: (status:string, canCloseModal?:boolean) => any
 }
 
 interface State {
-  status: string,
 }
 
 export default class Landing extends React.Component<Props,State> {
-  state = {
-    status: "",
-  }
-
   uploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
     const file = e.target.files?.[0]
@@ -36,44 +31,26 @@ export default class Landing extends React.Component<Props,State> {
           }
         }
         reader.onerror = (err) => {
-          this.setState({
-            status: err.toString(),
-          })
+          this.props.setStatus(err.toString(), true)
         }
         reader.readAsText(file)
-        this.setState({
-          status: "Loading..."
-        })
+        this.props.setStatus("Loading...")
       }
       else {
-        this.setState({
-          status: "You must upload a .csv file"
-        })
+        this.props.setStatus("You must upload a .csv file", true)
       }
     }
     else {
-      this.setState({
-        status: "No file was uploaded..."
-      })
+      this.props.setStatus("No file was uploaded...", true)
     }
   }
 
-  getModal = () => {
-    return (
-      <Modal centered show={this.state.status.length > 0}>
-        <Modal.Header>
-          <Modal.Title style={{color: "black"}}>{this.state.status}</Modal.Title>
-        </Modal.Header>
-      </Modal>
-    )
-  }
+
 
 
   render() {
     return (
       <div id="landing">
-        {this.getModal()}
-
         <CustomContainer>
           <header>
             <div className="navIconContainer">

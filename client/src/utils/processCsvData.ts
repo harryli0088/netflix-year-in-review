@@ -58,7 +58,13 @@ export default async function processCsvData(rows: CsvDataType[]) {
       if(nameKeyData.episode_run_time.length) {
         nameKeyData.processedDuration = Math.min(...nameKeyData.episode_run_time)
       }
-      else {
+      else if( //else if this is a K Drama
+        nameKeyData.original_language==="ko"
+        || nameKeyData.genres.find((g:{id:number, name: string}) => g.name === "Drama")
+      ) {
+        nameKeyData.processedDuration = 60
+      }
+      else { //else default to 42 minutes
         nameKeyData.processedDuration = 42
       }
 
@@ -99,7 +105,7 @@ export default async function processCsvData(rows: CsvDataType[]) {
         //else we've already seen this nameKey
 
         if(lastNameKey === nameKey) { //if this is the same name key
-          multiplier *= 1.1 //keep the streak going
+          multiplier *= 1 //keep the streak going
         }
         else {
           multiplier = 1

@@ -1,5 +1,6 @@
 import React from 'react'
 import memoize from 'memoize-one'
+import Modal from 'react-bootstrap/Modal'
 import Landing from 'Components/Landing/Landing'
 import PosterTopX, { PosterTopXRequiredProps } from 'Components/PosterTopX/PosterTopX'
 import { SERVER_URL, TOP_X, YEAR } from "consts"
@@ -35,6 +36,7 @@ export type TVSeriesType = {
 }
 
 interface State {
+  canCloseModal: boolean,
   csvData: CsvDataType[],
   errors: string[],
   status: string,
@@ -44,6 +46,7 @@ interface State {
 
 class App extends React.Component<{},State> {
   state:State = {
+    canCloseModal: false,
     csvData: [],
     errors: [],
     status: "",
@@ -77,6 +80,7 @@ class App extends React.Component<{},State> {
 
   processData = async (rows:CsvDataType[]) => {
     console.log(rows)
+    this.setStatus("Fetching data...")
     const yearDataMap = await processCsvData(rows)
 
     const yearData = yearDataMap.get(YEAR)
@@ -86,6 +90,7 @@ class App extends React.Component<{},State> {
         csvData: rows,
         yearDataMap,
       })
+      this.setStatus("Processing Top 5 Data")
       this.getTopXData(yearDataMap, YEAR)
     }
   }
@@ -113,6 +118,8 @@ class App extends React.Component<{},State> {
           }
         })
       }
+
+      this.setStatus("")
     }
   )
 
@@ -120,6 +127,7 @@ class App extends React.Component<{},State> {
     this.processData(parseCsvData(content)).catch(console.error)
   }
 
+  setStatus = (status:string, canCloseModal:boolean=false) => this.setState({status,canCloseModal})
 
   renderContent = () => {
     if(this.state.topXData.imgSrcs.length > 0) {
@@ -135,6 +143,7 @@ class App extends React.Component<{},State> {
     return (
       <Landing
         fileContentCallback={this.fileContentCallback}
+        setStatus={this.setStatus}
       />
     )
   }
@@ -142,6 +151,12 @@ class App extends React.Component<{},State> {
   render() {
     return (
       <div className="App">
+        <Modal centered show={this.state.status.length > 0}>
+          <Modal.Header closeButton={this.state.canCloseModal}>
+            <Modal.Title style={{color: "black"}}>{this.state.status}</Modal.Title>
+          </Modal.Header>
+        </Modal>
+
         {this.renderContent()}
       </div>
     )
