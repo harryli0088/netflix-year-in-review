@@ -4,7 +4,7 @@ import Landing from 'Components/Landing/Landing'
 import PosterTopX, { PosterTopXRequiredProps } from 'Components/PosterTopX/PosterTopX'
 import { SERVER_URL, TOP_X, YEAR } from "consts"
 import parseCsvData, { CsvDataType } from "utils/parseCsvData"
-import processCsvData, { TitleYearMapType } from "utils/processCsvData"
+import processCsvData, { ConsolidatedTmdbTvType, TitleYearMapType } from "utils/processCsvData"
 import './App.scss'
 
 export type TVSeriesType = {
@@ -77,7 +77,7 @@ class App extends React.Component<{},State> {
 
   processData = async (rows:CsvDataType[]) => {
     console.log(rows)
-    const titleYearMap = processCsvData(rows)
+    const titleYearMap = await processCsvData(rows)
 
     const yearData = titleYearMap.get(YEAR)
     console.log(yearData)
@@ -96,64 +96,23 @@ class App extends React.Component<{},State> {
       if(data) {
         const serieData = Array.from(data.serie).sort(
           (a, b) => {
-            if(a[1].titles.size > b[1].titles.size) return -1
+            if(a[1].count > b[1].count) return -1
             return 1
           }
         )
-        console.log(serieData)
+        // console.log(serieData)
 
-        const titles = serieData.slice(0, TOP_X).map(d => d[0])
-        this.setState({
-          topXData: {
-            imgSrcs: await Promise.all(
-              titles.map((t,i) =>
-                this.getImgSrcFromTitle(t, i===0)
-              )
-            ),
-            titles,
-            year: YEAR,
-          }
-        })
+        // const topXSeriesData = serieData.slice(0, TOP_X)
+        // this.setState({
+        //   topXData: {
+        //     imgSrcs: topXSeriesData.map(
+        //       (d,i) => i===0 ? d[1].consolidatedTvData.backdrop_path : d[1].consolidatedTvData.poster_path
+        //     ),
+        //     titles: topXSeriesData.map(d => d[0]),
+        //     year: YEAR,
+        //   }
+        // })
       }
-    }
-  )
-
-  getImgSrcFromTitle = memoize(
-    async (title:string, useBackdropPath:boolean) => {
-      // try {
-      //   //try to get the top node id
-      //   const topNodeId = parseInt(
-      //     await fetch(`${SERVER_URL}/topNodeIdFromTitle/${title}`).then(response => response.text())
-      //   )
-      //
-      //   //if the top node id is valid
-      //   if(!isNaN(topNodeId)) {
-      //     const data:TVSeriesType = await fetch(`${SERVER_URL}/title/${topNodeId}`).then(response => response.json())
-      //     return data.image,
-      //   }
-      //   else {
-      //     throw new Error(`No top node id returned for ${title}`)
-      //   }
-      // }
-      // catch(err) { //if there was some error, move on to the next title in the array
-      //   console.error(err)
-      // }
-
-
-      try {
-        const data = await fetch(`${SERVER_URL}/tmdbInfo/${title}`).then(response => response.json())
-        console.log(data)
-        const path = useBackdropPath ? data.results[0].backdrop_path : data.results[0].poster_path
-        const imgSrc = `https://image.tmdb.org/t/p/original/${path}`
-        console.log(imgSrc)
-        return imgSrc
-      }
-      catch(err) {
-        console.error(err)
-      }
-
-      //we didn't find any valid images
-      return ""
     }
   )
 

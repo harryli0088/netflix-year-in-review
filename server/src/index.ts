@@ -62,13 +62,95 @@ app.get('/topNodeIdFromTitle/:title', async (req:express.Request, res:express.Re
   }
 })
 
-app.get('/tmdbInfo/:title', async (req:express.Request, res:express.Response) => {
-  console.log(req.params.title)
+app.get('/tmdbSearchTv/:title', async (req:express.Request, res:express.Response) => {
+  console.log('tmdbSearchTv',req.params.title)
   axios.get(`https://api.themoviedb.org/3/search/tv?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(req.params.title)}`).then(tmdbResponse => {
     res.status(tmdbResponse.status).send(tmdbResponse.data)
   }).catch((err) => {
     res.status(500).send(err.message)
   })
+})
+
+app.get('/tmdbTvDetails/:titleId', async (req:express.Request, res:express.Response) => {
+  console.log('tmdbTvDetails',req.params.titleId)
+  axios.get(`https://api.themoviedb.org/3/tv/${req.params.titleId}?api_key=${TMDB_API_KEY}`).then(tmdbResponse => {
+    res.status(tmdbResponse.status).send(tmdbResponse.data)
+  }).catch((err) => {
+    res.status(500).send(err.message)
+  })
+})
+
+
+export type ConsolidatedTmdbTvType = {
+  backdrop_path: string,
+  episode_run_time: number[],
+  genres: {id:number, name: string}[],
+  id: number,
+  poster_path: string,
+  processedDuration: number,
+}
+
+const EMPTY_TMDB_TV_DATA:ConsolidatedTmdbTvType = {
+  backdrop_path: "",
+  episode_run_time: [], //array of run times returned from TMDB
+  genres: [],
+  id: -1,
+  poster_path: "",
+  processedDuration: 42, //in minutes
+}
+app.post('/postBatchTvDetails', async (req:express.Request, res:express.Response) => {
+  const titles:string[] = req.body
+  console.log(titles)
+
+  const data:{[title:string]: ConsolidatedTmdbTvType} = {}
+  await Promise.all(
+    titles.map(t => new Promise(
+      async (resolve, reject) => {
+        const consolidatedTvData = {...EMPTY_TMDB_TV_DATA}
+        data[t] = consolidatedTvData
+
+        try {
+          const searchData = await axios.get(
+            `https://api.themoviedb.org/3/search/tv?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(t)}`
+          ).then(response => response.data)
+
+          const result = (searchData.results && searchData.results[0]) //ASSUME the first result is what we're looking for
+          if(result) {
+            consolidatedTvData.backdrop_path = result.backdrop_path
+            consolidatedTvData.id = result.id
+            consolidatedTvData.poster_path = result.poster_path
+            const tvDetails = await axios.get(
+              `https://api.themoviedb.org/3/tv/${consolidatedTvData.id}?api_key=${TMDB_API_KEY}`
+            ).then(response => response.data)
+            if(tvDetails) {
+              consolidatedTvData.episode_run_time = tvDetails.episode_run_time
+              consolidatedTvData.genres = tvDetails.genres
+
+              //if there are episode run times from TMDB, use the smallest value for duration calculations
+              if(consolidatedTvData.episode_run_time.length > 0) {
+                consolidatedTvData.processedDuration = Math.min(...consolidatedTvData.episode_run_time)
+              }
+            }
+            else {
+              throw new Error(`There was no TV details for title: ${t}, id: ${consolidatedTvData.id}`)
+            }
+            console.log(`Successfully got data for title: ${t}`)
+            resolve(t)
+          }
+          else {
+            throw new Error(`There was not a result from TMDB for TV search: ${t}`)
+          }
+        }
+        catch(err) {
+          reject(err)
+        }
+      }).catch(console.error)
+    )
+  )
+
+
+  console.log("data",data)
+  res.status(200).send(data)
 })
 
 
