@@ -24,3 +24,5 @@ yarn-error.log*
 
 .eslintcache
 public/example.csv
+
+debug.log

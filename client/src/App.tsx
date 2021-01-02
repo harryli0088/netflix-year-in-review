@@ -4,7 +4,7 @@ import Landing from 'Components/Landing/Landing'
 import PosterTopX, { PosterTopXRequiredProps } from 'Components/PosterTopX/PosterTopX'
 import { SERVER_URL, TOP_X, YEAR } from "consts"
 import parseCsvData, { CsvDataType } from "utils/parseCsvData"
-import processCsvData, { ConsolidatedTmdbTvType, TitleYearMapType } from "utils/processCsvData"
+import processCsvData, { ConsolidatedTmdbTvType, YearDataMapType } from "utils/processCsvData"
 import './App.scss'
 
 export type TVSeriesType = {
@@ -38,7 +38,7 @@ interface State {
   csvData: CsvDataType[],
   errors: string[],
   status: string,
-  titleYearMap: TitleYearMapType,
+  yearDataMap: YearDataMapType,
   topXData: PosterTopXRequiredProps,
 }
 
@@ -47,7 +47,7 @@ class App extends React.Component<{},State> {
     csvData: [],
     errors: [],
     status: "",
-    titleYearMap: new Map(),
+    yearDataMap: new Map(),
     topXData: { imgSrcs: [], titles: [], year: 0 }
   }
 
@@ -77,41 +77,41 @@ class App extends React.Component<{},State> {
 
   processData = async (rows:CsvDataType[]) => {
     console.log(rows)
-    const titleYearMap = await processCsvData(rows)
+    const yearDataMap = await processCsvData(rows)
 
-    const yearData = titleYearMap.get(YEAR)
+    const yearData = yearDataMap.get(YEAR)
     console.log(yearData)
     if(yearData) {
       this.setState({
         csvData: rows,
-        titleYearMap,
+        yearDataMap,
       })
-      this.getTopXData(titleYearMap, YEAR)
+      this.getTopXData(yearDataMap, YEAR)
     }
   }
 
   getTopXData = memoize(
-    async (titleYearMap: TitleYearMapType, year: number) => {
-      const data = titleYearMap.get(year)
+    async (yearDataMap: YearDataMapType, year: number) => {
+      const data = yearDataMap.get(year)
       if(data) {
         const serieData = Array.from(data.serie).sort(
           (a, b) => {
-            if(a[1].count > b[1].count) return -1
+            if(a[1].score > b[1].score) return -1
             return 1
           }
         )
-        // console.log(serieData)
+        console.log("serieData",serieData)
 
-        // const topXSeriesData = serieData.slice(0, TOP_X)
-        // this.setState({
-        //   topXData: {
-        //     imgSrcs: topXSeriesData.map(
-        //       (d,i) => i===0 ? d[1].consolidatedTvData.backdrop_path : d[1].consolidatedTvData.poster_path
-        //     ),
-        //     titles: topXSeriesData.map(d => d[0]),
-        //     year: YEAR,
-        //   }
-        // })
+        const topXSeriesData = serieData.slice(0, TOP_X)
+        this.setState({
+          topXData: {
+            imgSrcs: topXSeriesData.map(
+              (d,i) => i===0 ? d[1].consolidatedTvData.backdrop_path : d[1].consolidatedTvData.poster_path
+            ),
+            titles: topXSeriesData.map(d => d[0]),
+            year: YEAR,
+          }
+        })
       }
     }
   )

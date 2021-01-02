@@ -86,17 +86,17 @@ export type ConsolidatedTmdbTvType = {
   episode_run_time: number[],
   genres: {id:number, name: string}[],
   id: number,
+  original_language: string,
   poster_path: string,
-  processedDuration: number,
 }
 
 const EMPTY_TMDB_TV_DATA:ConsolidatedTmdbTvType = {
   backdrop_path: "",
-  episode_run_time: [], //array of run times returned from TMDB
+  episode_run_time: [],
   genres: [],
   id: -1,
+  original_language: "",
   poster_path: "",
-  processedDuration: 42, //in minutes
 }
 app.post('/postBatchTvDetails', async (req:express.Request, res:express.Response) => {
   const titles:string[] = req.body
@@ -116,29 +116,26 @@ app.post('/postBatchTvDetails', async (req:express.Request, res:express.Response
 
           const result = (searchData.results && searchData.results[0]) //ASSUME the first result is what we're looking for
           if(result) {
-            consolidatedTvData.backdrop_path = result.backdrop_path
-            consolidatedTvData.id = result.id
-            consolidatedTvData.poster_path = result.poster_path
+            consolidatedTvData.backdrop_path = result.backdrop_path || ""
+            consolidatedTvData.id = result.id ?? -1
+            consolidatedTvData.original_language = result.original_language || ""
+            consolidatedTvData.poster_path = result.poster_path || ""
+
             const tvDetails = await axios.get(
               `https://api.themoviedb.org/3/tv/${consolidatedTvData.id}?api_key=${TMDB_API_KEY}`
             ).then(response => response.data)
             if(tvDetails) {
-              consolidatedTvData.episode_run_time = tvDetails.episode_run_time
-              consolidatedTvData.genres = tvDetails.genres
-
-              //if there are episode run times from TMDB, use the smallest value for duration calculations
-              if(consolidatedTvData.episode_run_time.length > 0) {
-                consolidatedTvData.processedDuration = Math.min(...consolidatedTvData.episode_run_time)
-              }
+              consolidatedTvData.episode_run_time = tvDetails.episode_run_time || []
+              consolidatedTvData.genres = tvDetails.genres || []
             }
             else {
-              throw new Error(`There was no TV details for title: ${t}, id: ${consolidatedTvData.id}`)
+              throw new Error(`There were no TV details for title: ${t}, id: ${consolidatedTvData.id}`)
             }
             console.log(`Successfully got data for title: ${t}`)
             resolve(t)
           }
           else {
-            throw new Error(`There was not a result from TMDB for TV search: ${t}`)
+            throw new Error(`There were no results from TMDB for TV search: ${t}`)
           }
         }
         catch(err) {
