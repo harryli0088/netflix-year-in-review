@@ -209,9 +209,11 @@ export default class PosterTopX extends React.Component<Props,State> {
             {this.showShare()}
           </div> */}
 
-          <p>Save & Share on your social media with <b>#nyir2020</b>!</p>
-          <p className="mobileOnly">(To Save Image, Tap + Hold)</p>
-          <p className="desktopOnly">(To Save Image, Right Click -{">"} Save As...)</p>
+          <div className="description">
+            <p>Save & Share on your social media with <b>#nyir2020</b>!</p>
+            <p className="mobileOnly">(To Save Image, Tap + Hold)</p>
+            <p className="desktopOnly">(To Save Image, Right Click -{">"} Save As...)</p>
+          </div>
         </div>
       </CustomContainer>
     )
