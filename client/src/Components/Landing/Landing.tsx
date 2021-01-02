@@ -11,7 +11,7 @@ import "./landing.scss"
 
 type Props = {
   fileContentCallback: (content:string) => any,
-  setStatus: (status:string, canCloseModal?:boolean) => any
+  setStatus: (status:string, showCloseButton?:boolean, showLoadingSpinner?:boolean) => any
 }
 
 interface State {
@@ -31,17 +31,17 @@ export default class Landing extends React.Component<Props,State> {
           }
         }
         reader.onerror = (err) => {
-          this.props.setStatus(err.toString(), true)
+          this.props.setStatus(err.toString(), true, false)
         }
         reader.readAsText(file)
         this.props.setStatus("Loading...")
       }
       else {
-        this.props.setStatus("You must upload a .csv file", true)
+        this.props.setStatus("You must upload a .csv file", true, false)
       }
     }
     else {
-      this.props.setStatus("No file was uploaded...", true)
+      this.props.setStatus("No file was uploaded...", true, false)
     }
   }
 

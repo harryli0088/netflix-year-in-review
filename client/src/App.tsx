@@ -36,20 +36,22 @@ export type TVSeriesType = {
 }
 
 interface State {
-  canCloseModal: boolean,
   csvData: CsvDataType[],
   errors: string[],
-  status: string,
+  showCloseButton: boolean,
+  showLoadingSpinner: boolean,
+  status: string | JSX.Element,
   yearDataMap: YearDataMapType,
   topXData: PosterTopXRequiredProps,
 }
 
 class App extends React.Component<{},State> {
   state:State = {
-    canCloseModal: true,
     csvData: [],
     errors: [],
-    status: ";aa;a;a;a;a; ",
+    showCloseButton: false,
+    showLoadingSpinner: false,
+    status: "",
     yearDataMap: new Map(),
     topXData: { imgSrcs: [], titles: [], year: 0 }
   }
@@ -80,7 +82,7 @@ class App extends React.Component<{},State> {
 
   processData = async (rows:CsvDataType[]) => {
     console.log(rows)
-    this.setStatus("Fetching data...")
+    this.setStatus("Processing data...")
     const yearDataMap = await processCsvData(rows)
 
     const yearData = yearDataMap.get(YEAR)
@@ -90,7 +92,7 @@ class App extends React.Component<{},State> {
         csvData: rows,
         yearDataMap,
       })
-      this.setStatus("Processing Top 5 Data")
+      this.setStatus("Processing Top 5 Data...")
       this.getTopXData(yearDataMap, YEAR)
     }
   }
@@ -127,7 +129,11 @@ class App extends React.Component<{},State> {
     this.processData(parseCsvData(content)).catch(console.error)
   }
 
-  setStatus = (status:string, canCloseModal:boolean=false) => this.setState({status,canCloseModal})
+  setStatus = (
+    status:string="",
+    showCloseButton:boolean=false,
+    showLoadingSpinner:boolean=true
+  ) => this.setState({status,showCloseButton,showLoadingSpinner})
 
   renderContent = () => {
     if(this.state.topXData.imgSrcs.length > 0) {
@@ -153,9 +159,10 @@ class App extends React.Component<{},State> {
       <div className="App">
         <CustomModal
           close={() => this.setStatus("",false)}
-          closeButton={this.state.canCloseModal}
-          show={this.state.status.length > 0}
           content={this.state.status}
+          showCloseButton={this.state.showCloseButton}
+          showLoadingSpinner={this.state.showLoadingSpinner}
+          showModal={this.state.status !== ""}
         />
 
         {this.renderContent()}
