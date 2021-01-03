@@ -20,7 +20,7 @@
       justify-content: space-between;
 
       & > * {
-        width: 33%;
+        width: calc(33% - 0.4em);
       }
 
       .aspectRatioContainer {
