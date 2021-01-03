@@ -1,10 +1,8 @@
 .customContainer {
-  display: flex;
-  justify-content: center;
-
   .customContainerContent {
-    background: black;
     max-width: 600px;
     min-height: 100vh;
+    margin-left: auto;
+    margin-right: auto;
   }
 }

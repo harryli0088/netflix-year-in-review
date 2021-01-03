@@ -1,21 +1,50 @@
+$bottom-bar-height: 3em;
+
 #results {
-  .slideshowContainer {
-    position: relative;
-    margin: auto;
+  .resultsContent {
+    background: black;
+    padding-bottom: $bottom-bar-height;
 
-    .posterFade {
-      animation-name: fade;
-      animation-duration: 1.5s;
+    .slideshowContainer {
+      position: relative;
+      margin: auto;
 
+      .posterFade {
+        animation-name: posterFade;
+        animation-duration: 1s;
+      }
+
+      @keyframes posterFade {
+        from {opacity: .4}
+        to {opacity: 1}
+      }
+    }
+
+    .description {
+      padding: 1em;
     }
   }
 
-  .description {
-    padding: 1em;
-  }
 
-  @keyframes fade {
-    from {opacity: .4}
-    to {opacity: 1}
+  .bottomBar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: $bottom-bar-height;
+    background: none;
+
+    .bottomBarContent {
+      background-color: #555;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: $bottom-bar-height;
+
+      button {
+        border: none;
+        background: none;
+      }
+    }
   }
 }
