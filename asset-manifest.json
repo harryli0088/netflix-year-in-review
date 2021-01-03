@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/static/css/main.fb94f8a1.chunk.css",
-    "main.js": "/static/js/main.af08bee0.chunk.js",
-    "main.js.map": "/static/js/main.af08bee0.chunk.js.map",
+    "main.css": "/static/css/main.96f1b1e2.chunk.css",
+    "main.js": "/static/js/main.c01d5b80.chunk.js",
+    "main.js.map": "/static/js/main.c01d5b80.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.a8d8bb28.js",
     "runtime-main.js.map": "/static/js/runtime-main.a8d8bb28.js.map",
     "static/js/2.83990f0c.chunk.js": "/static/js/2.83990f0c.chunk.js",
@@ -10,8 +10,9 @@
     "static/js/3.4943e335.chunk.js": "/static/js/3.4943e335.chunk.js",
     "static/js/3.4943e335.chunk.js.map": "/static/js/3.4943e335.chunk.js.map",
     "index.html": "/index.html",
-    "static/css/main.fb94f8a1.chunk.css.map": "/static/css/main.fb94f8a1.chunk.css.map",
+    "static/css/main.96f1b1e2.chunk.css.map": "/static/css/main.96f1b1e2.chunk.css.map",
     "static/js/2.83990f0c.chunk.js.LICENSE.txt": "/static/js/2.83990f0c.chunk.js.LICENSE.txt",
+    "static/media/exampleOverview.82f7e2a9.png": "/static/media/exampleOverview.82f7e2a9.png",
     "static/media/exampleTopX.2be862da.png": "/static/media/exampleTopX.2be862da.png",
     "static/media/netflixNLogo.20fed67c.svg": "/static/media/netflixNLogo.20fed67c.svg",
     "static/media/overview.4a47419c.png": "/static/media/overview.4a47419c.png",
@@ -25,7 +26,7 @@
   "entrypoints": [
     "static/js/runtime-main.a8d8bb28.js",
     "static/js/2.83990f0c.chunk.js",
-    "static/css/main.fb94f8a1.chunk.css",
-    "static/js/main.af08bee0.chunk.js"
+    "static/css/main.96f1b1e2.chunk.css",
+    "static/js/main.c01d5b80.chunk.js"
   ]
 }
