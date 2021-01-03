@@ -2,6 +2,7 @@ import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons'
 import CustomContainer from 'Components/CustomContainer/CustomContainer'
+import exampleOverview from './exampleOverview.png'
 import exampleTopX from './exampleTopX.png'
 import step1 from './step1.svg'
 import step2 from './step2.svg'
@@ -63,6 +64,8 @@ export default class Landing extends React.Component<Props,State> {
             <section>
               <div id="exampleImages">
                 <div className="aspectRatioContainer"><img src={exampleTopX} alt="Example Top 5 Result"/></div>
+
+                <div className="aspectRatioContainer"><img src={exampleOverview} alt="Example Overview Result"/></div>
 
                 <div id="moreComingSoon">MORE COMING SOON!</div>
 
