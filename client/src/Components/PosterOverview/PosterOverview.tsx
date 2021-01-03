@@ -3,7 +3,7 @@ import memoize from 'memoize-one'
 import { YEAR } from "consts"
 import ImgFromCanvas from 'Components/ImgFromCanvas/ImgFromCanvas'
 import { YearDataMapType } from "utils/processCsvData"
-import backgroundImageSrc from "./overview.jpg"
+import backgroundImageSrc from "./overview.png"
 
 type Props = {
   yearDataMap: YearDataMapType,
