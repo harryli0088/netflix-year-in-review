@@ -1,10 +1,16 @@
 import React from 'react'
 import memoize from 'memoize-one'
+import CustomContainer from 'Components/CustomContainer/CustomContainer'
 import ImgFromCanvas from 'Components/ImgFromCanvas/ImgFromCanvas'
-// import { SERVER_URL } from "consts"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  // faDownload,
+  faShare,
+} from '@fortawesome/free-solid-svg-icons'
+import { SERVER_URL } from "consts"
 import drawImage from "utils/drawImage"
 import multilineFillText from "utils/multilineFillText"
-// import shareApi from "utils/shareApi"
+import shareApi from "utils/shareApi"
 import backgroundImageSrc from "./top5.jpg"
 import no1 from "./no1.png"
 import "./posterTopX.scss"
@@ -18,12 +24,13 @@ const IMG_BOUNDS:{x:number, y:number, width:number, height:number}[] = [
   {x: 810, y: 980, width: 261, height: 382},
 ]
 
-export type PosterTopXProps = {
+export type PosterTopXRequiredProps = {
   imgSrcs: string[],
   titles: string[],
   year: number,
 }
 
+export type Props = PosterTopXRequiredProps
 
 interface State {
   backgroundImgDims: {height:number, width:number},
@@ -31,8 +38,8 @@ interface State {
 }
 
 
-export default class PosterTopX extends React.Component<PosterTopXProps,State> {
-  constructor(props:PosterTopXProps) {
+export default class PosterTopX extends React.Component<Props,State> {
+  constructor(props:Props) {
     super(props)
 
     this.state = {
@@ -145,7 +152,23 @@ export default class PosterTopX extends React.Component<PosterTopXProps,State> {
 
   render() {
     return (
-      <ImgFromCanvas backgroundImageSrc={backgroundImageSrc} canvasDrawCallback={this.canvasDrawCallback}/>
+      <CustomContainer>
+        <div className="poster">
+          <ImgFromCanvas backgroundImageSrc={backgroundImageSrc} canvasDrawCallback={this.canvasDrawCallback}/>
+          <br/><br/>
+
+          {/* <div>
+            <button onClick={e => this.download()}><FontAwesomeIcon icon={faDownload}/> Save Image</button>
+            {this.showShare()}
+          </div> */}
+
+          <div className="description">
+            <p>Save & Share on your social media with <b>#nyir2020</b>!</p>
+            <p className="mobileOnly">(To Save Image, Tap + Hold)</p>
+            <p className="desktopOnly">(To Save Image, Right Click -{">"} Save As...)</p>
+          </div>
+        </div>
+      </CustomContainer>
     )
   }
 }

@@ -2,7 +2,8 @@ import React from 'react'
 import memoize from 'memoize-one'
 import CustomModal from 'Components/CustomModal/CustomModal'
 import Landing from 'Components/Landing/Landing'
-import PosterTopX, { PosterTopXRequiredProps } from 'Components/PosterTopX/PosterTopX'
+import Results from 'Components/Results/Results'
+import { PosterTopXProps } from 'Components/PosterTopX/PosterTopX'
 import { SERVER_URL, TOP_X, YEAR } from "consts"
 import parseCsvData, { CsvDataType } from "utils/parseCsvData"
 import processCsvData, { YearDataMapType } from "utils/processCsvData"
@@ -42,7 +43,7 @@ interface State {
   showLoadingSpinner: boolean,
   status: string | JSX.Element,
   yearDataMap: YearDataMapType,
-  topXData: PosterTopXRequiredProps,
+  topXData: PosterTopXProps,
 }
 
 class App extends React.Component<{},State> {
@@ -139,8 +140,8 @@ class App extends React.Component<{},State> {
     if(this.state.topXData.imgSrcs.length > 0) {
       return (
         <div>
-          <PosterTopX
-            {...this.state.topXData}
+          <Results
+            topXData={this.state.topXData}
           />
         </div>
       )

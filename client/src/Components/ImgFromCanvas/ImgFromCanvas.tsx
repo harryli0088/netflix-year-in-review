@@ -92,7 +92,7 @@ export default class ImgFromCanvas extends React.Component<Props,State> {
 
   render() {
     return (
-      <img ref={this.imgRef} alt="Loading..."/>
+      <img className="imgFromCanvas" ref={this.imgRef} alt="Loading..."/>
     )
   }
 }
