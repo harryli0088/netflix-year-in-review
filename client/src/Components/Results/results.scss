@@ -1,5 +1,21 @@
 #results {
+  .slideshowContainer {
+    position: relative;
+    margin: auto;
+
+    .posterFade {
+      animation-name: fade;
+      animation-duration: 1.5s;
+
+    }
+  }
+
   .description {
     padding: 1em;
+  }
+
+  @keyframes fade {
+    from {opacity: .4}
+    to {opacity: 1}
   }
 }

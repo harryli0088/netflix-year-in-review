@@ -28,7 +28,7 @@ export default class PosterTopX extends React.Component<Props,State> {
 
       const yearData = yearDataMap.get(YEAR)
       if(yearData) {
-        data.movieCount = yearData.movie.size
+        data.movieCount = yearData.movie.size + 10
         yearData.movie.forEach((nameData) => {
           console.log("nameData",nameData)
           data.duration += nameData.tmdbData.runtime
@@ -52,11 +52,11 @@ export default class PosterTopX extends React.Component<Props,State> {
     ctx.textAlign = "center"
     ctx.textBaseline = "middle"
 
-    ctx.fillText(Math.ceil(data.duration/60).toString(),540,530)
+    ctx.fillText(Math.ceil(data.duration/60).toString(),540,540)
 
     ctx.font = '280px Bebas Neue'
-    ctx.fillText(data.movieCount.toString(),295,1400)
-    ctx.fillText(data.serieCount.toString(),785,1400)
+    ctx.fillText(data.movieCount.toString(),295,1430)
+    ctx.fillText(data.serieCount.toString(),785,1430)
   }
 
 
