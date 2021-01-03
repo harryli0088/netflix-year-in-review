@@ -1,36 +1,62 @@
 import React from 'react'
+import memoize from 'memoize-one'
+import { YEAR } from "consts"
 import ImgFromCanvas from 'Components/ImgFromCanvas/ImgFromCanvas'
+import { YearDataMapType } from "utils/processCsvData"
 import backgroundImageSrc from "./overview.jpg"
 
-export type PosterOverviewProps = {
-  duration: number,
-  movieCount: number,
-  serieCount: number,
+type Props = {
+  yearDataMap: YearDataMapType,
 }
 
 interface State {
 }
 
 
-export default class PosterTopX extends React.Component<PosterOverviewProps,State> {
-  constructor(props:PosterOverviewProps) {
-    super(props)
-
-    this.state = {
-    }
-  }
-
+export default class PosterTopX extends React.Component<Props,State> {
   componentDidMount() {
     this.forceUpdate()
   }
 
+  processData = memoize(
+    (yearDataMap: YearDataMapType) => {
+      const data = {
+        duration: 0,
+        movieCount: 0,
+        serieCount: 0,
+      }
+
+      const yearData = yearDataMap.get(YEAR)
+      if(yearData) {
+        data.movieCount = yearData.movie.size
+        yearData.movie.forEach((nameData) => {
+          console.log("nameData",nameData)
+          data.duration += nameData.tmdbData.runtime
+        })
+
+        data.serieCount = yearData.serie.size
+        yearData.serie.forEach((nameData) => {
+          data.duration += nameData.tmdbData.processedDuration
+        })
+      }
+
+      return data
+    }
+  )
+
   canvasDrawCallback = (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
+    const data = this.processData(this.props.yearDataMap)
+
     ctx.font = '556px Bebas Neue'
     ctx.fillStyle = "white"
     ctx.textAlign = "center"
     ctx.textBaseline = "middle"
 
-    ctx.fillText(this.props.duration.toString(), 540, 486)
+    ctx.fillText(Math.ceil(data.duration/60).toString(),540,530)
+
+    ctx.font = '280px Bebas Neue'
+    ctx.fillText(data.movieCount.toString(),295,1400)
+    ctx.fillText(data.serieCount.toString(),785,1400)
   }
 
 

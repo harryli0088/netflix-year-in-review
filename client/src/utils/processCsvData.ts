@@ -1,79 +1,99 @@
 import getImgSrcFromTmdbPath from "utils/getImgSrcFromTmdbPath"
 import indexOfMultiple from "utils/indexOfMultiple"
+import postBatchMovieDetails from "utils/postBatchMovieDetails"
 import postBatchTvDetails from "utils/postBatchTvDetails"
 import { CsvDataType } from "utils/parseCsvData"
 import { YEAR } from "consts"
 
-export type ConsolidatedTmdbTvType = {
+type TmdbDataType = {
   backdrop_path: string,
-  episode_run_time: number[],
+  episode_run_time: number[], //array of run times returned from TMDB, used only for series
   genres: {id:number, name: string}[],
   id: number,
   original_language: string,
   poster_path: string,
-  processedDuration: number,
+  processedDuration: number, //in minutes, used only for series
+  runtime: number, //used only for movies
 }
 
-type NameDataType = {consolidatedTvData: ConsolidatedTmdbTvType, score: number, titles: Map<string, number>}
+type NameDataType = {tmdbData: TmdbDataType, score: number, titles: Map<string, number>}
 type NameMapType = Map<string,NameDataType>
 export type YearDataMapType = Map<number, {
   [typeKey:string]: NameMapType,
 }>
 
-const EMPTY_TMDB_TV_DATA:ConsolidatedTmdbTvType = {
+const EMPTY_TMDB_DATA:TmdbDataType = {
   backdrop_path: "",
-  episode_run_time: [], //array of run times returned from TMDB
+  episode_run_time: [],
   genres: [],
   id: -1,
   original_language: "",
   poster_path: "",
-  processedDuration: 42, //in minutes
+  processedDuration: 42,
+  runtime: 0,
 }
 
 export default async function processCsvData(rows: CsvDataType[]) {
-  const yearTitlesMap = new Map<number, Set<string>>()
+  const yearTitlesMap = new Map<number, Map<string,Set<string>>>()
   //for each row
   for(let rowIndex=0; rowIndex<rows.length; ++rowIndex) {
     const row = rows[rowIndex]
 
     const year = row.Date.getFullYear() //get the year
     if(!yearTitlesMap.has(year)) { //if we are encountering this year for the first time
-      yearTitlesMap.set(year, new Set<string>())
+      yearTitlesMap.set(year, new Map<string,Set<string>>())
     }
 
-    const titlesSet = yearTitlesMap.get(year) //get the value for this year
-    if(titlesSet) { //keep typescript happy
-      const { nameKey } = getKeysFromTitle(row.Title)
-      titlesSet.add(nameKey)
+    const yearData = yearTitlesMap.get(year) //get the data for this year
+    if(yearData) { //keep typescript happy
+      const { typeKey, nameKey } = getKeysFromTitle(row.Title)
+
+      if(!yearData.has(typeKey)) {
+        yearData.set(typeKey, new Set<string>())
+      }
+
+      const typeTitlesSet = yearData.get(typeKey) //get the titles set for this tyle
+      if(typeTitlesSet) { //keep typescript happy
+        typeTitlesSet.add(nameKey) //add the title to this set
+      }
     }
   }
 
+  const [ moviePostData, tvPostData ] = await Promise.all(
+    [
+      postBatchMovieDetails(
+        Array.from( yearTitlesMap.get(YEAR)?.get("movie")?.keys() || [] ) //get the serie titles in this year
+      ).then(response => response.json()),
 
-  const titles:string[] = Array.from( yearTitlesMap.get(YEAR)?.keys() || [] ) //get the titles in this year
-  const postData:{[nameKey:string]:ConsolidatedTmdbTvType} = await postBatchTvDetails(titles).then(
-    response => response.json()
-  ).then(data => {
-    for(const nameKey in data) {
-      const nameKeyData = data[nameKey]
-      if(nameKeyData.episode_run_time.length) {
-        nameKeyData.processedDuration = Math.min(...nameKeyData.episode_run_time)
-      }
-      else if( //else if this is a K Drama
-        nameKeyData.original_language==="ko"
-        || nameKeyData.genres.find((g:{id:number, name: string}) => g.name === "Drama")
-      ) {
-        nameKeyData.processedDuration = 60
-      }
-      else { //else default to 42 minutes
-        nameKeyData.processedDuration = 42
-      }
+      postBatchTvDetails(
+        Array.from( yearTitlesMap.get(YEAR)?.get("serie")?.keys() || [] ) //get the serie titles in this year
+      ).then(
+        response => response.json()
+      ).then((data: {[nameKey:string]:TmdbDataType}) => {
+        for(const nameKey in data) {
+          const nameKeyData = data[nameKey]
+          if(nameKeyData.episode_run_time.length) {
+            nameKeyData.processedDuration = Math.min(...nameKeyData.episode_run_time)
+          }
+          else if( //else if this is a K Drama
+            nameKeyData.original_language==="ko"
+            || nameKeyData.genres.find((g:{id:number, name: string}) => g.name === "Drama")
+          ) {
+            nameKeyData.processedDuration = 60
+          }
+          else { //else default to 42 minutes
+            nameKeyData.processedDuration = 42
+          }
 
-      nameKeyData.backdrop_path = getImgSrcFromTmdbPath(nameKeyData.backdrop_path)
-      nameKeyData.poster_path = getImgSrcFromTmdbPath(nameKeyData.poster_path)
-    }
-    return data
-  })
-  console.log("postData",postData)
+          nameKeyData.backdrop_path = getImgSrcFromTmdbPath(nameKeyData.backdrop_path)
+          nameKeyData.poster_path = getImgSrcFromTmdbPath(nameKeyData.poster_path)
+        }
+        return data
+      }),
+    ]
+  )
+  console.log("moviePostData",moviePostData)
+  console.log("tvPostData",tvPostData)
 
   //process each row now that we have the API data
   const yearDataMap:YearDataMapType = new Map()
@@ -97,7 +117,7 @@ export default async function processCsvData(rows: CsvDataType[]) {
       if(yearType) { //keep typescript happy
         if(!yearType.has(nameKey)) { //if we are encountering this nameKey for the first time
           yearType.set(nameKey, { //initialize an empty value
-            consolidatedTvData: postData[nameKey] || {...EMPTY_TMDB_TV_DATA},
+            tmdbData: (typeKey==="serie" ? tvPostData[nameKey] : moviePostData[nameKey]) || {...EMPTY_TMDB_DATA},
             score: 0,
             titles: new Map<string, number>(),
           })
@@ -112,7 +132,7 @@ export default async function processCsvData(rows: CsvDataType[]) {
         }
 
         const titleMap = yearType.get(nameKey)
-        const duration = postData[nameKey]?.processedDuration || 42
+        const duration = tvPostData[nameKey]?.processedDuration || 42
         updateTitleData(multiplier, row.Title, duration, titleMap)
       }
 

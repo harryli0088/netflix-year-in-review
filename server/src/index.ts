@@ -81,61 +81,86 @@ app.get('/', (req:express.Request, res:express.Response) => {
 // })
 
 
-export type ConsolidatedTmdbTvType = {
+
+type TmdbDataType = {
   backdrop_path: string,
   episode_run_time: number[],
   genres: {id:number, name: string}[],
   id: number,
   original_language: string,
   poster_path: string,
+  runtime: number,
 }
 
-const EMPTY_TMDB_TV_DATA:ConsolidatedTmdbTvType = {
+const EMPTY_TMDB_DATA:TmdbDataType = {
   backdrop_path: "",
   episode_run_time: [],
   genres: [],
   id: -1,
   original_language: "",
   poster_path: "",
+  runtime: 0,
 }
+
 app.post('/postBatchTvDetails', async (req:express.Request, res:express.Response) => {
   const titles:string[] = req.body
   console.log(titles)
 
-  const data:{[title:string]: ConsolidatedTmdbTvType} = {}
+  const data = await postBatchTmdbData("tv", titles)
+
+  res.status(200).send(data)
+})
+
+app.post('/postBatchMovieDetails', async (req:express.Request, res:express.Response) => {
+  const titles:string[] = req.body
+  console.log(titles)
+
+  const data = await postBatchTmdbData("movie", titles)
+
+  res.status(200).send(data)
+})
+
+async function postBatchTmdbData(
+  type: "tv" | "movie",
+  titles: string[],
+) {
+  const isTv = type === "tv"
+
+  const data:{[title:string]: TmdbDataType} = {}
   await Promise.all(
     titles.map(t => new Promise(
       async (resolve, reject) => {
-        const consolidatedTvData = {...EMPTY_TMDB_TV_DATA}
-        data[t] = consolidatedTvData
+        const titleData:TmdbDataType = {...EMPTY_TMDB_DATA}
+        data[t] = titleData
 
         try {
           const searchData = await axios.get(
-            `https://api.themoviedb.org/3/search/tv?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(t)}`
+            `https://api.themoviedb.org/3/search/${type}?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(t)}`
           ).then(response => response.data)
 
           const result = (searchData.results && searchData.results[0]) //ASSUME the first result is what we're looking for
           if(result) {
-            consolidatedTvData.backdrop_path = result.backdrop_path || ""
-            consolidatedTvData.id = result.id ?? -1
-            consolidatedTvData.original_language = result.original_language || ""
-            consolidatedTvData.poster_path = result.poster_path || ""
+            titleData.backdrop_path = result.backdrop_path || ""
+            titleData.id = !isNaN(result.id) ? result.id : -1
+            titleData.original_language = result.original_language || ""
+            titleData.poster_path = result.poster_path || ""
 
-            const tvDetails = await axios.get(
-              `https://api.themoviedb.org/3/tv/${consolidatedTvData.id}?api_key=${TMDB_API_KEY}`
+            const details = await axios.get(
+              `https://api.themoviedb.org/3/${type}/${titleData.id}?api_key=${TMDB_API_KEY}`
             ).then(response => response.data)
-            if(tvDetails) {
-              consolidatedTvData.episode_run_time = tvDetails.episode_run_time || []
-              consolidatedTvData.genres = tvDetails.genres || []
+            if(details) {
+              titleData.episode_run_time = details.episode_run_time || []
+              titleData.genres = details.genres || []
+              titleData.runtime = details.runtime || 0
             }
             else {
-              throw new Error(`There were no TV details for title: ${t}, id: ${consolidatedTvData.id}`)
+              throw new Error(`There were no ${type.toUpperCase()} details for title: ${t}, id: ${titleData.id}`)
             }
             console.log(`Successfully got data for title: ${t}`)
             resolve(t)
           }
           else {
-            throw new Error(`There were no results from TMDB for TV search: ${t}`)
+            throw new Error(`There were no results from TMDB for ${type.toUpperCase()} search: ${t}`)
           }
         }
         catch(err) {
@@ -145,19 +170,21 @@ app.post('/postBatchTvDetails', async (req:express.Request, res:express.Response
     )
   )
 
+  console.log("data", data)
+  return data
+}
 
-  console.log("data",data)
-  res.status(200).send(data)
-})
 
-app.get("/tmdbImg/:path", async (req:express.Request, res:express.Response) => {
-  const path:string = req.params.path
-  const url = 'https://image.tmdb.org/t/p/original/' + path
-  console.log("Requesting image", url)
-  axios({ method: 'get', responseType: 'stream', url }).then(
-    response => response.data.pipe(res)
-  ).catch(err => res.status(500).send(err.message))
-})
+
+
+// app.get("/tmdbImg/:path", async (req:express.Request, res:express.Response) => {
+//   const path:string = req.params.path
+//   const url = 'https://image.tmdb.org/t/p/original/' + path
+//   console.log("Requesting image", url)
+//   axios({ method: 'get', responseType: 'stream', url }).then(
+//     response => response.data.pipe(res)
+//   ).catch(err => res.status(500).send(err.message))
+// })
 
 
 app.listen(port, () => {

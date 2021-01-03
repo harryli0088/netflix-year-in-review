@@ -1,11 +1,8 @@
 import React from 'react'
-import memoize from 'memoize-one'
 import CustomModal from 'Components/CustomModal/CustomModal'
 import Landing from 'Components/Landing/Landing'
 import Results from 'Components/Results/Results'
-import { PosterOverviewProps } from 'Components/PosterOverview/PosterOverview'
-import { PosterTopXProps } from 'Components/PosterTopX/PosterTopX'
-import { SERVER_URL, TOP_X, YEAR } from "consts"
+import { SERVER_URL } from "consts"
 import parseCsvData, { CsvDataType } from "utils/parseCsvData"
 import processCsvData, { YearDataMapType } from "utils/processCsvData"
 import './App.scss'
@@ -40,24 +37,20 @@ export type TVSeriesType = {
 interface State {
   csvData: CsvDataType[],
   errors: string[],
-  overviewData: PosterOverviewProps,
   showCloseButton: boolean,
   showLoadingSpinner: boolean,
   status: string | JSX.Element,
   yearDataMap: YearDataMapType,
-  topXData: PosterTopXProps,
 }
 
 class App extends React.Component<{},State> {
   state:State = {
     csvData: [],
     errors: [],
-    overviewData: {duration: 406, movieCount: 0, serieCount: 0},
     showCloseButton: false,
     showLoadingSpinner: false,
     status: "",
     yearDataMap: new Map(),
-    topXData: { imgSrcs: [], titles: [], year: 0 }
   }
 
   componentDidMount() {
@@ -87,47 +80,13 @@ class App extends React.Component<{},State> {
   processData = async (rows:CsvDataType[]) => {
     console.log(rows)
     this.setStatus("Processing data...")
-    const yearDataMap = await processCsvData(rows)
 
-    const yearData = yearDataMap.get(YEAR)
-    console.log(yearData)
-    if(yearData) {
-      this.setState({
-        csvData: rows,
-        yearDataMap,
-      })
-      this.setStatus("Processing Top 5 Data...")
-      this.getTopXData(yearDataMap, YEAR)
-    }
+    this.setState({
+      csvData: rows,
+      yearDataMap: await processCsvData(rows),
+    })
+    this.setStatus("")
   }
-
-  getTopXData = memoize(
-    async (yearDataMap: YearDataMapType, year: number) => {
-      const data = yearDataMap.get(year)
-      if(data) {
-        const serieData = Array.from(data.serie).sort(
-          (a, b) => {
-            if(a[1].score > b[1].score) return -1
-            return 1
-          }
-        )
-        console.log("serieData",serieData)
-
-        const topXSeriesData = serieData.slice(0, TOP_X)
-        this.setState({
-          topXData: {
-            imgSrcs: topXSeriesData.map(
-              (d,i) => i===0 ? d[1].consolidatedTvData.backdrop_path : d[1].consolidatedTvData.poster_path
-            ),
-            titles: topXSeriesData.map(d => d[0]),
-            year: YEAR,
-          }
-        })
-      }
-
-      this.setStatus("")
-    }
-  )
 
   fileContentCallback = (content:string) => {
     this.processData(parseCsvData(content)).catch(console.error)
@@ -140,12 +99,11 @@ class App extends React.Component<{},State> {
   ) => this.setState({status,showCloseButton,showLoadingSpinner})
 
   renderContent = () => {
-    if(this.state.topXData.imgSrcs.length > 0) {
+    if(this.state.yearDataMap.size > 0) {
       return (
         <div>
           <Results
-            overviewData={this.state.overviewData}
-            topXData={this.state.topXData}
+            yearDataMap={this.state.yearDataMap}
           />
         </div>
       )

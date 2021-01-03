@@ -1,9 +1,10 @@
 import React from 'react'
 import memoize from 'memoize-one'
 import ImgFromCanvas from 'Components/ImgFromCanvas/ImgFromCanvas'
-// import { SERVER_URL } from "consts"
+import { TOP_X, YEAR } from "consts"
 import drawImage from "utils/drawImage"
 import multilineFillText from "utils/multilineFillText"
+import { YearDataMapType } from "utils/processCsvData"
 // import shareApi from "utils/shareApi"
 import backgroundImageSrc from "./top5.jpg"
 import no1 from "./no1.png"
@@ -18,10 +19,8 @@ const IMG_BOUNDS:{x:number, y:number, width:number, height:number}[] = [
   {x: 810, y: 980, width: 261, height: 382},
 ]
 
-export type PosterTopXProps = {
-  imgSrcs: string[],
-  titles: string[],
-  year: number,
+type Props = {
+  yearDataMap: YearDataMapType
 }
 
 
@@ -31,8 +30,8 @@ interface State {
 }
 
 
-export default class PosterTopX extends React.Component<PosterTopXProps,State> {
-  constructor(props:PosterTopXProps) {
+export default class PosterTopX extends React.Component<Props,State> {
+  constructor(props:Props) {
     super(props)
 
     this.state = {
@@ -45,11 +44,34 @@ export default class PosterTopX extends React.Component<PosterTopXProps,State> {
     this.forceUpdate()
   }
 
+  processData = memoize(
+    (yearDataMap: YearDataMapType):{imgSrcs: string[], titles: string[]} => {
+      const data = yearDataMap.get(YEAR)
+      if(data) {
+        const serieData = Array.from(data.serie).sort(
+          (a, b) => {
+            if(a[1].score > b[1].score) return -1
+            return 1
+          }
+        )
+        console.log("serieData",serieData)
+
+        const topXSeriesData = serieData.slice(0, TOP_X)
+
+        return {
+          imgSrcs: topXSeriesData.map(
+            (d,i) => i===0 ? d[1].tmdbData.backdrop_path : d[1].tmdbData.poster_path
+          ),
+          titles: topXSeriesData.map(d => d[0]),
+        }
+      }
+
+      return {imgSrcs: [], titles: []}
+    }
+  )
+
   canvasDrawCallback = (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
-    const {
-      imgSrcs,
-      titles,
-    } = this.props
+    const { imgSrcs, titles } = this.processData(this.props.yearDataMap)
 
     const imgs = this.getImages(imgSrcs)
 

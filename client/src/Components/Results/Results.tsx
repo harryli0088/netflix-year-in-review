@@ -1,31 +1,35 @@
 import React from 'react'
-import memoize from 'memoize-one'
 import CustomContainer from 'Components/CustomContainer/CustomContainer'
-import PosterOverview, { PosterOverviewProps } from 'Components/PosterOverview/PosterOverview'
-import PosterTopX, { PosterTopXProps } from 'Components/PosterTopX/PosterTopX'
+import PosterOverview from 'Components/PosterOverview/PosterOverview'
+import PosterTopX from 'Components/PosterTopX/PosterTopX'
+import { YearDataMapType } from "utils/processCsvData"
 import "./results.scss"
 
 
 type Props = {
-  overviewData: PosterOverviewProps,
-  topXData: PosterTopXProps,
+  yearDataMap: YearDataMapType,
 }
 
 interface State {
+  posterIndex: number,
 }
 
 
 export default class Results extends React.Component<Props,State> {
   constructor(props:Props) {
     super(props)
+
+    this.state = {
+      posterIndex: 0,
+    }
   }
 
   render() {
     return (
       <CustomContainer>
         <div id="results">
-          <PosterOverview {...this.props.overviewData}/>
-          <PosterTopX {...this.props.topXData}/>
+          <PosterOverview yearDataMap={this.props.yearDataMap}/>
+          <PosterTopX yearDataMap={this.props.yearDataMap}/>
           <br/><br/>
 
           {/* <div>

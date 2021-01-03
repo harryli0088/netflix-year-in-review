@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faComments, faInfoCircle, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons'
 import CustomContainer from 'Components/CustomContainer/CustomContainer'
 import NetflixLogo from 'Components/NetflixLogo/NetflixLogo'
-import example1 from './example1.png'
+import exampleTopX from './exampleTopX.png'
 import step1 from './step1.svg'
 import step2 from './step2.svg'
 import step3 from './step3.svg'
@@ -79,7 +79,7 @@ export default class Landing extends React.Component<Props,State> {
 
           <section>
             <div id="exampleImages">
-              <div className="aspectRatioContainer"><img src={example1} alt="example1"/></div>
+              <div className="aspectRatioContainer"><img src={exampleTopX} alt="Example Top 5 Result"/></div>
 
               <div id="moreComingSoon">MORE COMING SOON!</div>
 
