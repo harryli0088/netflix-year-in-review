@@ -1,28 +1,31 @@
 {
   "files": {
-    "main.css": "/static/css/main.8463c508.chunk.css",
-    "main.js": "/static/js/main.d8cc7d85.chunk.js",
-    "main.js.map": "/static/js/main.d8cc7d85.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.5aeaa04f.js",
-    "runtime-main.js.map": "/static/js/runtime-main.5aeaa04f.js.map",
-    "static/js/2.efb01c97.chunk.js": "/static/js/2.efb01c97.chunk.js",
-    "static/js/2.efb01c97.chunk.js.map": "/static/js/2.efb01c97.chunk.js.map",
-    "static/js/3.e9df2519.chunk.js": "/static/js/3.e9df2519.chunk.js",
-    "static/js/3.e9df2519.chunk.js.map": "/static/js/3.e9df2519.chunk.js.map",
+    "main.css": "/static/css/main.fb94f8a1.chunk.css",
+    "main.js": "/static/js/main.af08bee0.chunk.js",
+    "main.js.map": "/static/js/main.af08bee0.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.a8d8bb28.js",
+    "runtime-main.js.map": "/static/js/runtime-main.a8d8bb28.js.map",
+    "static/js/2.83990f0c.chunk.js": "/static/js/2.83990f0c.chunk.js",
+    "static/js/2.83990f0c.chunk.js.map": "/static/js/2.83990f0c.chunk.js.map",
+    "static/js/3.4943e335.chunk.js": "/static/js/3.4943e335.chunk.js",
+    "static/js/3.4943e335.chunk.js.map": "/static/js/3.4943e335.chunk.js.map",
     "index.html": "/index.html",
-    "static/css/main.8463c508.chunk.css.map": "/static/css/main.8463c508.chunk.css.map",
-    "static/js/2.efb01c97.chunk.js.LICENSE.txt": "/static/js/2.efb01c97.chunk.js.LICENSE.txt",
+    "static/css/main.fb94f8a1.chunk.css.map": "/static/css/main.fb94f8a1.chunk.css.map",
+    "static/js/2.83990f0c.chunk.js.LICENSE.txt": "/static/js/2.83990f0c.chunk.js.LICENSE.txt",
     "static/media/exampleTopX.2be862da.png": "/static/media/exampleTopX.2be862da.png",
+    "static/media/netflixNLogo.20fed67c.svg": "/static/media/netflixNLogo.20fed67c.svg",
     "static/media/overview.4a47419c.png": "/static/media/overview.4a47419c.png",
+    "static/media/reactLogo.928f956d.svg": "/static/media/reactLogo.928f956d.svg",
     "static/media/step1.2738a8ac.svg": "/static/media/step1.2738a8ac.svg",
     "static/media/step2.d70f7a6f.svg": "/static/media/step2.d70f7a6f.svg",
     "static/media/step3.3f89ad1b.svg": "/static/media/step3.3f89ad1b.svg",
+    "static/media/tmdbLogo.de1a664e.svg": "/static/media/tmdbLogo.de1a664e.svg",
     "static/media/top5.10bd8577.jpg": "/static/media/top5.10bd8577.jpg"
   },
   "entrypoints": [
-    "static/js/runtime-main.5aeaa04f.js",
-    "static/js/2.efb01c97.chunk.js",
-    "static/css/main.8463c508.chunk.css",
-    "static/js/main.d8cc7d85.chunk.js"
+    "static/js/runtime-main.a8d8bb28.js",
+    "static/js/2.83990f0c.chunk.js",
+    "static/css/main.fb94f8a1.chunk.css",
+    "static/js/main.af08bee0.chunk.js"
   ]
 }
