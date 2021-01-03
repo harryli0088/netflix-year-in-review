@@ -4,6 +4,6 @@ import "./netflixLogo.scss"
 
 export default function NetflixLogo() {
   return (
-    <img id="netflixLogo" src={logo} alt="logo" />
+    <img className="netflixLogo" src={logo} alt="logo" />
   )
 }

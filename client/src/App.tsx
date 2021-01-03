@@ -1,6 +1,7 @@
 import React from 'react'
 import CustomModal from 'Components/CustomModal/CustomModal'
 import Landing from 'Components/Landing/Landing'
+import NavBar from 'Components/NavBar/NavBar'
 import Results from 'Components/Results/Results'
 import { SERVER_URL } from "consts"
 import parseCsvData, { CsvDataType } from "utils/parseCsvData"
@@ -127,6 +128,8 @@ class App extends React.Component<{},State> {
           showLoadingSpinner={this.state.showLoadingSpinner}
           showModal={this.state.status !== ""}
         />
+
+        <NavBar showFeedback={this.state.yearDataMap.size > 0}/>
 
         {this.renderContent()}
       </div>

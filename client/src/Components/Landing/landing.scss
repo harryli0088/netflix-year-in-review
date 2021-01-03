@@ -1,139 +1,137 @@
 #landing {
   text-align: left;
 
-  header {
-    padding-top: 1em;
-    padding-bottom: 1em;
-    display: flex;
-    justify-content: space-around;
-    text-align: center;
+  #landingContent {
+    background: black;
+    padding-top: 1px;
 
-    .navIconContainer {
-      width: 25%;
-      font-size: 9px;
-      cursor: pointer;
-
-      .navIcon {
-        font-size: 2em;
-      }
-
-      a {
-        color: white;
-      }
+    section {
+      padding-bottom: 1em;
     }
 
-    #designDevelopmentContainer {
-      color: #777;
-      cursor: not-allowed;
-    }
-  }
-
-  section {
-    padding-bottom: 1em;
-  }
-
-  #description {
-    font-size: 10px;
-  }
-
-  #exampleImages {
-    background: #5C5C5C;
-    padding: 1em;
-    display: flex;
-    justify-content: space-between;
-
-    & > * {
-      width: 31%;
+    #description {
+      font-size: 10px;
     }
 
-    .aspectRatioContainer {
-      background-color: red;
-      padding-top: 56.25%;
-      position: relative;
-      img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        width: 100%;
-        height: 100%;
-      }
-    }
-
-
-    #moreComingSoon {
-      background: #C4C4C4;
-      font-family: Bebas Neue;
-      font-size: 35px;
-      line-height: 35px;
+    #exampleImages {
+      background: #5C5C5C;
+      padding: 1em;
       display: flex;
-      align-items: center;
-      text-align: center;
+      justify-content: space-between;
 
-      color: rgba(0, 0, 0, 0.45);
-    }
-  }
+      & > * {
+        width: 31%;
+      }
 
-  #instructions {
-    font-weight: bold;
-
-    #instructionsHeading {
-      padding-left: 1em;
-      padding-right: 1em;
-    }
-
-    .stepContainer {
-      display: flex;
-      margin-top: 1em;
-      background: rgba(255, 255, 255, 0.25);
-
-      .stepIcon {
-        width: 20%;
-        display: flex;
-        align-items: center;
-
+      .aspectRatioContainer {
+        background-color: red;
+        padding-top: 56.25%;
+        position: relative;
         img {
+          position: absolute;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
           width: 100%;
           height: 100%;
         }
       }
 
-      .stepContent {
-        width: 80%;
-        font-size: 9px;
-        padding: 1em;
 
-        .stepTitle {
-          font-weight: bold;
-          font-size: 18px;
-          font-family: 'Bebas Neue';
-          margin-bottom: 0.5em;
-        }
+      #moreComingSoon {
+        background: #C4C4C4;
+        font-family: Bebas Neue;
+        font-size: 35px;
+        line-height: 35px;
+        display: flex;
+        align-items: center;
+        text-align: center;
+
+        color: rgba(0, 0, 0, 0.45);
       }
     }
 
-    a {
-      width: 100%;
-      height: 100%;
+    #instructions {
+      font-weight: bold;
+
+      #instructionsHeading {
+        padding-left: 1em;
+        padding-right: 1em;
+      }
+
+      .stepContainer {
+        display: flex;
+        margin-top: 1em;
+        background: rgba(255, 255, 255, 0.25);
+
+        .stepIcon {
+          width: 20%;
+          display: flex;
+          align-items: center;
+
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
+
+        .stepContent {
+          width: 80%;
+          font-size: 9px;
+          padding: 1em;
+
+          .stepTitle {
+            font-weight: bold;
+            font-size: 18px;
+            font-family: 'Bebas Neue';
+            margin-bottom: 0.5em;
+          }
+        }
+      }
+
+      a {
+        width: 100%;
+        height: 100%;
+      }
     }
-  }
 
-  #uploadFileContainer {
-    padding-left: 1em;
-    padding-right: 1em;
+    #uploadFileContainer {
+      padding-left: 1em;
+      padding-right: 1em;
 
-    #fileUploadButton {
-      background: #333;
-      border: 1px solid white;
-      border-radius: 5px;
-      padding: 15px;
+      #fileUploadButton {
+        background: #333;
+        border: 1px solid white;
+        border-radius: 5px;
+        padding: 15px;
+        text-align: center;
+        display: block;
+        cursor: pointer;
+        background: #0090CE;
+        font-size: 22px;
+        font-family: 'Bebas Neue';
+      }
+    }
+
+    footer {
       text-align: center;
-      display: block;
-      cursor: pointer;
-      background: #0090CE;
-      font-size: 22px;
-      font-family: 'Bebas Neue';
+
+      #logoContainer {
+        margin-left: 20px;
+
+        a {
+          &:not(:last-child) {
+            margin-right: 3em;
+          }
+
+          img {
+            margin-top: 1em;
+            height: 40px;
+          }
+        }
+      }
+      padding-bottom: 1em;
     }
   }
 }

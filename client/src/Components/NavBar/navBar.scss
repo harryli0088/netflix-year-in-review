@@ -1,0 +1,35 @@
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+
+  #navContainer {
+    padding-top: 1em;
+    padding-bottom: 0.75em;
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    background: black;
+    border-bottom: 1px solid #333;
+
+    .navIconContainer {
+      width: 25%;
+      font-size: 9px;
+      cursor: pointer;
+
+      .navIcon {
+        font-size: 2em;
+      }
+
+      a {
+        color: white;
+        text-decoration: none;
+      }
+    }
+
+    #designDevelopmentContainer {
+      color: #777;
+      cursor: not-allowed;
+    }
+  }
+}

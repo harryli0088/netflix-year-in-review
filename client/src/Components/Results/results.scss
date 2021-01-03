@@ -1,4 +1,4 @@
-$bottom-bar-height: 3em;
+$bottom-bar-height: 80px;
 
 #results {
   .resultsContent {
@@ -35,11 +35,17 @@ $bottom-bar-height: 3em;
     background: none;
 
     .bottomBarContent {
-      background-color: #555;
+      background-color: black;
+      border-top: 1px solid #333;
       display: flex;
       justify-content: space-between;
       align-items: center;
       height: $bottom-bar-height;
+
+      .saveMessage {
+        margin-top: 0.5em;
+        font-size: 9px;
+      }
 
       button {
         border: none;

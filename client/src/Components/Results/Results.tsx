@@ -27,6 +27,10 @@ export default class Results extends React.Component<Props,State> {
     }
   }
 
+  componentDidMount() {
+    window.scrollTo(0,0) //scroll to the top of the screen
+  }
+
   getPosterData = memoize(
     (yearDataMap:YearDataMapType) => ([
       {
@@ -69,12 +73,6 @@ export default class Results extends React.Component<Props,State> {
               <button onClick={e => this.download()}><FontAwesomeIcon icon={faDownload}/> Save Image</button>
               {this.showShare()}
             </div> */}
-
-            <div className="description">
-              <p>Save & Share on your social media with <b>#nyir2020</b>!</p>
-              <p className="mobileOnly">(To Save Image, Tap + Hold)</p>
-              <p className="desktopOnly">(To Save Image, Right Click -{">"} Save As...)</p>
-            </div>
           </div>
         </CustomContainer>
 
@@ -88,7 +86,16 @@ export default class Results extends React.Component<Props,State> {
                 <FontAwesomeIcon icon={faChevronLeft}/>
               </button>
 
-              <div>{posters[posterIndex].label}</div>
+              <div>
+                <div><b>{posters[posterIndex].label} ({posterIndex+1}/{posters.length})</b></div>
+                <div className="saveMessage">
+                  <div><b>Save & Share on your social media with #nyir2020!</b></div>
+                  <p>
+                    <span className="mobileOnly">Tap + Hold image</span>
+                    <span className="desktopOnly">Right Click -{">"} Save As...”</span>
+                  </p>
+                </div>
+              </div>
 
               <button
                 disabled={posterIndex >= posters.length-1}
