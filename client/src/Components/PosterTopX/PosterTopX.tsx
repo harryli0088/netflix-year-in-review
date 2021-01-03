@@ -1,6 +1,7 @@
 import React from 'react'
 import memoize from 'memoize-one'
 import CustomContainer from 'Components/CustomContainer/CustomContainer'
+import ImgFromCanvas from 'Components/ImgFromCanvas/ImgFromCanvas'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   // faDownload,
@@ -33,116 +34,65 @@ export type Props = PosterTopXRequiredProps
 
 interface State {
   backgroundImgDims: {height:number, width:number},
-  showShare: boolean,
+  // showShare: boolean,
 }
 
 
 export default class PosterTopX extends React.Component<Props,State> {
-  canvas: HTMLCanvasElement
-  ctx: CanvasRenderingContext2D | null
-  imgRef: React.RefObject<HTMLImageElement> = React.createRef()
-  images: HTMLImageElement[] = []
-
   constructor(props:Props) {
     super(props)
 
     this.state = {
       backgroundImgDims: {height:0, width:0},
-      showShare: navigator.share !== undefined,
+      // showShare: navigator.share !== undefined,
     }
-
-    this.canvas = document.createElement('canvas')
-    this.ctx = this.canvas.getContext('2d')
   }
 
   componentDidMount() {
     this.forceUpdate()
   }
 
-  componentDidUpdate = () => {
+  canvasDrawCallback = (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
     const {
       imgSrcs,
       titles,
     } = this.props
 
-    const {
-      backgroundImgDims,
-    } = this.state
-
-    const ctx = this.ctx
-    const backgroundImg = this.getBackgroundImage(backgroundImageSrc)
     const imgs = this.getImages(imgSrcs)
-    if(ctx) {
-      ctx.save()
-      if(backgroundImgDims.width > 0 && backgroundImgDims.height > 0) {
-        this.canvas.width = backgroundImgDims.width
-        this.canvas.height = backgroundImgDims.height
 
-        drawImage(ctx, backgroundImg, 0, 0) //background image
+    ctx.font = '150px Bebas Neue'
+    ctx.fillStyle = "white"
+    ctx.textAlign = "center"
+    multilineFillText(ctx, titles[0], IMG_BOUNDS[0].x, IMG_BOUNDS[0].y, IMG_BOUNDS[0].width, IMG_BOUNDS[0].height) //alt text
+    drawImage( //main image
+      ctx,
+      imgs[0],
+      IMG_BOUNDS[0].x,
+      IMG_BOUNDS[0].y,
+      IMG_BOUNDS[0].width,
+      IMG_BOUNDS[0].height,
+    )
+    drawImage(ctx, this.getNo1Image(no1), 30, 207) //red #1 overlay
 
-        ctx.font = '150px Bebas Neue'
-        ctx.fillStyle = "white"
-        ctx.textAlign = "center"
-        multilineFillText(ctx, titles[0], IMG_BOUNDS[0].x, IMG_BOUNDS[0].y, IMG_BOUNDS[0].width, IMG_BOUNDS[0].height) //alt text
-        drawImage( //main image
-          ctx,
-          imgs[0],
-          IMG_BOUNDS[0].x,
-          IMG_BOUNDS[0].y,
-          IMG_BOUNDS[0].width,
-          IMG_BOUNDS[0].height,
-        )
-        drawImage(ctx, this.getNo1Image(no1), 30, 207) //red #1 overlay
+    ctx.font = '60px Bebas Neue'
+    IMG_BOUNDS.slice(1).forEach((bounds,i) => {
+      multilineFillText(ctx, titles[i+1], bounds.x+10, bounds.y+5, bounds.width-20, bounds.height-10) //alt text
+      drawImage(ctx, imgs[i+1], bounds.x, bounds.y, bounds.width, bounds.height) //poster img
+    })
 
-        ctx.font = '60px Bebas Neue'
-        IMG_BOUNDS.slice(1).forEach((bounds,i) => {
-          multilineFillText(ctx, titles[i+1], bounds.x+10, bounds.y+5, bounds.width-20, bounds.height-10) //alt text
-          drawImage(ctx, imgs[i+1], bounds.x, bounds.y, bounds.width, bounds.height) //poster img
-        })
+    //main title
+    ctx.font = '110px Bebas Neue'
+    ctx.fillText(titles[0],540, 920,1040) //1040 adds some padding on both sides
 
-        //main title
-        ctx.font = '110px Bebas Neue'
-        ctx.fillText(titles[0],540, 920,1040) //1040 adds some padding on both sides
-
-        //2-5 show titles
-        ctx.font = '72px Bebas Neue'
-        ctx.textAlign = "left"
-        ctx.fillText(titles[1], 149, 1450, 900)
-        ctx.fillText(titles[2], 163, 1540, 900)
-        ctx.fillText(titles[3], 182, 1630, 900)
-        ctx.fillText(titles[4], 198, 1720, 900)
-      }
-      else {
-        this.canvas.width = 1080
-        this.canvas.height = 1920
-
-        ctx.fillStyle = "white"
-        ctx.font = '60px Bebas Neue'
-        ctx.textAlign = "center"
-        ctx.textBaseline = "middle"
-        ctx.fillText("Loading...", 540, 300)
-      }
-      ctx.restore()
-
-      //set the source of the image in the DOM
-      if(this.imgRef.current) {
-        this.imgRef.current.src = this.canvas.toDataURL("image/png")
-      }
-    }
+    //2-5 show titles
+    ctx.font = '72px Bebas Neue'
+    ctx.textAlign = "left"
+    ctx.fillText(titles[1], 149, 1450, 900)
+    ctx.fillText(titles[2], 163, 1540, 900)
+    ctx.fillText(titles[3], 182, 1630, 900)
+    ctx.fillText(titles[4], 198, 1720, 900)
   }
 
-  getBackgroundImage = memoize(
-    (imgSrc: string) => {
-      const img = new Image()
-      img.src = imgSrc
-      img.setAttribute('crossorigin', 'anonymous')
-      img.onload = () => this.setState({
-        backgroundImgDims: {height: img.height, width: img.width}
-      })
-
-      return img
-    }
-  )
 
   getNo1Image = memoize(
     (imgSrc: string) => {
@@ -167,44 +117,44 @@ export default class PosterTopX extends React.Component<Props,State> {
     })
   )
 
-  download = () => {
-    const a = document.createElement("a")
-    a.href = this.canvas.toDataURL("image/png")
-    a.download = "Netflix_Year_In_Review_Top_5.png"
-    a.click()
-  }
+  // download = () => {
+  //   const a = document.createElement("a")
+  //   a.href = this.canvas.toDataURL("image/png")
+  //   a.download = "Netflix_Year_In_Review_Top_5.png"
+  //   a.click()
+  // }
 
-  share = () => {
-    this.canvas.toBlob((blob) => {
-      if(blob) {
-        shareApi(blob)
-        // const dumb = async () => {
-        //   if(await shareApi(blob) === false) {
-        //     this.setState({showShare: true})
-        //   }
-        // }
-        //
-        // dumb()
-      }
-    })
-  }
+  // share = () => {
+  //   this.canvas.toBlob((blob) => {
+  //     if(blob) {
+  //       shareApi(blob)
+  //       // const dumb = async () => {
+  //       //   if(await shareApi(blob) === false) {
+  //       //     this.setState({showShare: true})
+  //       //   }
+  //       // }
+  //       //
+  //       // dumb()
+  //     }
+  //   })
+  // }
 
-  showShare = () => {
-    if(this.state.showShare) {
-      return (
-        <button onClick={e => this.share()}>
-          <FontAwesomeIcon icon={faShare}/> Share
-        </button>
-      )
-    }
-  }
+  // showShare = () => {
+  //   if(this.state.showShare) {
+  //     return (
+  //       <button onClick={e => this.share()}>
+  //         <FontAwesomeIcon icon={faShare}/> Share
+  //       </button>
+  //     )
+  //   }
+  // }
 
 
   render() {
     return (
       <CustomContainer>
         <div className="poster">
-          <img ref={this.imgRef} alt="Loading..."/>
+          <ImgFromCanvas backgroundImageSrc={backgroundImageSrc} canvasDrawCallback={this.canvasDrawCallback}/>
           <br/><br/>
 
           {/* <div>
