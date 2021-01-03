@@ -32,8 +32,8 @@ export default class Results extends React.Component<Props,State> {
     } = this.state
 
     const posters = [
-      <PosterOverview yearDataMap={this.props.yearDataMap}/>,
       <PosterTopX yearDataMap={this.props.yearDataMap}/>,
+      <PosterOverview yearDataMap={this.props.yearDataMap}/>,
     ]
 
     return (
