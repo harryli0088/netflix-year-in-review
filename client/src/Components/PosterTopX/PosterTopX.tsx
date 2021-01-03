@@ -158,7 +158,8 @@ export default class PosterTopX extends React.Component<Props,State> {
   getImages = memoize(
     (imgSrcs: string[]) => imgSrcs.map((imgSrc) => {
       const img = new Image()
-      img.src = `${SERVER_URL}/tmdbImg${imgSrc}`
+      img.src = imgSrc
+      // img.src = `${SERVER_URL}/tmdbImg${imgSrc}`
       img.setAttribute('crossorigin', 'anonymous')
       img.onload = () => this.forceUpdate()
 
