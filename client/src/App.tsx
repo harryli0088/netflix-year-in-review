@@ -3,6 +3,7 @@ import memoize from 'memoize-one'
 import CustomModal from 'Components/CustomModal/CustomModal'
 import Landing from 'Components/Landing/Landing'
 import Results from 'Components/Results/Results'
+import { PosterOverviewProps } from 'Components/PosterOverview/PosterOverview'
 import { PosterTopXProps } from 'Components/PosterTopX/PosterTopX'
 import { SERVER_URL, TOP_X, YEAR } from "consts"
 import parseCsvData, { CsvDataType } from "utils/parseCsvData"
@@ -39,6 +40,7 @@ export type TVSeriesType = {
 interface State {
   csvData: CsvDataType[],
   errors: string[],
+  overviewData: PosterOverviewProps,
   showCloseButton: boolean,
   showLoadingSpinner: boolean,
   status: string | JSX.Element,
@@ -50,6 +52,7 @@ class App extends React.Component<{},State> {
   state:State = {
     csvData: [],
     errors: [],
+    overviewData: {duration: 406, movieCount: 0, serieCount: 0},
     showCloseButton: false,
     showLoadingSpinner: false,
     status: "",
@@ -59,7 +62,7 @@ class App extends React.Component<{},State> {
 
   componentDidMount() {
     if(process.env.NODE_ENV === "development") {
-      // this.fetchCsv()
+      this.fetchCsv()
     }
     fetch(`${SERVER_URL}/`)
   }
@@ -141,6 +144,7 @@ class App extends React.Component<{},State> {
       return (
         <div>
           <Results
+            overviewData={this.state.overviewData}
             topXData={this.state.topXData}
           />
         </div>

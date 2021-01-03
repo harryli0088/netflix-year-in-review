@@ -1,11 +1,13 @@
 import React from 'react'
 import memoize from 'memoize-one'
 import CustomContainer from 'Components/CustomContainer/CustomContainer'
+import PosterOverview, { PosterOverviewProps } from 'Components/PosterOverview/PosterOverview'
 import PosterTopX, { PosterTopXProps } from 'Components/PosterTopX/PosterTopX'
 import "./results.scss"
 
 
 type Props = {
+  overviewData: PosterOverviewProps,
   topXData: PosterTopXProps,
 }
 
@@ -22,6 +24,7 @@ export default class Results extends React.Component<Props,State> {
     return (
       <CustomContainer>
         <div id="results">
+          <PosterOverview {...this.props.overviewData}/>
           <PosterTopX {...this.props.topXData}/>
           <br/><br/>
 
