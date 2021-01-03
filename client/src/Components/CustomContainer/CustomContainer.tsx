@@ -6,7 +6,7 @@ type Props = {
   children: any,
 }
 
-export default (props:Props) => {
+export default function CustomContainer(props:Props) {
   return (
     <div className="customContainer">
       <div className="customContainerContent">

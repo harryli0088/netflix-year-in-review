@@ -1,4 +1,3 @@
-import getImgSrcFromTmdbPath from "utils/getImgSrcFromTmdbPath"
 import indexOfMultiple from "utils/indexOfMultiple"
 import postBatchTvDetails from "utils/postBatchTvDetails"
 import { CsvDataType } from "utils/parseCsvData"
@@ -67,9 +66,6 @@ export default async function processCsvData(rows: CsvDataType[]) {
       else { //else default to 42 minutes
         nameKeyData.processedDuration = 42
       }
-
-      nameKeyData.backdrop_path = getImgSrcFromTmdbPath(nameKeyData.backdrop_path)
-      nameKeyData.poster_path = getImgSrcFromTmdbPath(nameKeyData.poster_path)
     }
     return data
   })

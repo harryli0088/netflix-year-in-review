@@ -1,6 +1,6 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faComments, faInfoCircle, faLink, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons'
+import { faComments, faInfoCircle, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons'
 import CustomContainer from 'Components/CustomContainer/CustomContainer'
 import NetflixLogo from 'Components/NetflixLogo/NetflixLogo'
 import example1 from './example1.png'
@@ -108,10 +108,10 @@ export default class Landing extends React.Component<Props,State> {
 
               <div className="stepContent">
                 <div className="stepTitle">2. TAP HERE + HOLD --{">"} OPEN IN NEW TAB</div>
-                <p>
+                <div>
                   <div>Links to official Netflix Activity Log (<a href="https:///www.netflix.com/viewingactivity" target="_blank" rel="noopener noreferrer">netflix.com/viewingactivity</a>)</div>
                   <div>**if using a smartphone, tap and HOLD link -{">"} open in New Tab**</div>
-                </p>
+                </div>
               </div>
             </div>
 

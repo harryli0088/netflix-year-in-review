@@ -11,7 +11,7 @@ type Props = {
   showLoadingSpinner: boolean,
   showModal: boolean,
 }
-export default (props:Props) => {
+export default function CustomModal(props:Props) {
   return (
     <div className={"customModal" + (props.showModal?" show":"")}>
       {props.showCloseButton && <div className="closeButton" onClick={e => props.close()}><FontAwesomeIcon icon={faTimes}/></div>}

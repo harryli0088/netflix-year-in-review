@@ -2,7 +2,12 @@ import React from 'react'
 import memoize from 'memoize-one'
 import CustomContainer from 'Components/CustomContainer/CustomContainer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faDownload, faShare } from '@fortawesome/free-solid-svg-icons'
+import {
+  // faDownload,
+  faShare,
+} from '@fortawesome/free-solid-svg-icons'
+import { SERVER_URL } from "consts"
+import drawImage from "utils/drawImage"
 import multilineFillText from "utils/multilineFillText"
 import shareApi from "utils/shareApi"
 import backgroundImageSrc from "./top5.jpg"
@@ -28,7 +33,6 @@ export type Props = PosterTopXRequiredProps
 
 interface State {
   backgroundImgDims: {height:number, width:number},
-  posterImage: {height:number, width:number},
   showShare: boolean,
 }
 
@@ -44,7 +48,6 @@ export default class PosterTopX extends React.Component<Props,State> {
 
     this.state = {
       backgroundImgDims: {height:0, width:0},
-      posterImage: {height:0, width:0},
       showShare: navigator.share !== undefined,
     }
 
@@ -60,12 +63,10 @@ export default class PosterTopX extends React.Component<Props,State> {
     const {
       imgSrcs,
       titles,
-      year,
     } = this.props
 
     const {
       backgroundImgDims,
-      posterImage,
     } = this.state
 
     const ctx = this.ctx
@@ -77,25 +78,26 @@ export default class PosterTopX extends React.Component<Props,State> {
         this.canvas.width = backgroundImgDims.width
         this.canvas.height = backgroundImgDims.height
 
-        ctx.drawImage(backgroundImg, 0, 0) //background image
+        drawImage(ctx, backgroundImg, 0, 0) //background image
 
         ctx.font = '150px Bebas Neue'
         ctx.fillStyle = "white"
         ctx.textAlign = "center"
         multilineFillText(ctx, titles[0], IMG_BOUNDS[0].x, IMG_BOUNDS[0].y, IMG_BOUNDS[0].width, IMG_BOUNDS[0].height) //alt text
-        ctx.drawImage(
+        drawImage( //main image
+          ctx,
           imgs[0],
           IMG_BOUNDS[0].x,
           IMG_BOUNDS[0].y,
           IMG_BOUNDS[0].width,
           IMG_BOUNDS[0].height,
-        ) //main image
-        ctx.drawImage(this.getNo1Image(no1), 30, 207) //red #1 overlay
+        )
+        drawImage(ctx, this.getNo1Image(no1), 30, 207) //red #1 overlay
 
         ctx.font = '60px Bebas Neue'
         IMG_BOUNDS.slice(1).forEach((bounds,i) => {
           multilineFillText(ctx, titles[i+1], bounds.x+10, bounds.y+5, bounds.width-20, bounds.height-10) //alt text
-          ctx.drawImage(imgs[i+1], bounds.x, bounds.y, bounds.width, bounds.height) //poster img
+          drawImage(ctx, imgs[i+1], bounds.x, bounds.y, bounds.width, bounds.height) //poster img
         })
 
         //main title
@@ -156,7 +158,7 @@ export default class PosterTopX extends React.Component<Props,State> {
   getImages = memoize(
     (imgSrcs: string[]) => imgSrcs.map((imgSrc) => {
       const img = new Image()
-      img.src = imgSrc
+      img.src = `${SERVER_URL}/tmdbImg${imgSrc}`
       img.setAttribute('crossorigin', 'anonymous')
       img.onload = () => this.forceUpdate()
 

@@ -2,7 +2,7 @@ import React from 'react'
 import "./loadingSpinner.scss"
 
 //Taken from https://tobiasahlin.com/spinkit/
-export default () => {
+export default function LoadingSpinner() {
   return (
     <div className="spinner">
       <div className="rect1"></div>

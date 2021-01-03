@@ -14,71 +14,71 @@ const port = process.env.PORT || 5000
 
 const limiter = rateLimit({
   windowMs: 1000, // 1 second
-  max: 10 // limit each IP to 10 requests per windowMs
+  max: 5 // limit each IP to 5 requests per windowMs
 })
 app.use(limiter)
 
 app.get('/', (req:express.Request, res:express.Response) => {
-  res.status(200).send("Hello!")
+  res.status(200).send("nyir2020 API")
 })
 
-app.get('/title/:id', (req:express.Request, res:express.Response) => {
-  const url = getNetflixUrl(req)
-  axios.get(url).then(response => {
-    try {
-      const $ = cheerio.load(response.data)
+// app.get('/title/:id', (req:express.Request, res:express.Response) => {
+//   const url = getNetflixUrl(req)
+//   axios.get(url).then(response => {
+//     try {
+//       const $ = cheerio.load(response.data)
+//
+//       const scripts:cheerio.Cheerio = $('script[type="application/ld+json"]')
+//       if(scripts.length === 0) {
+//         throw new Error("No scripts found")
+//       }
+//       else {
+//         if(scripts.length > 1) {
+//           console.warn("There were multiple scripts that matched the query for", url)
+//         }
+//
+//         const s = scripts[0] as cheerio.TagElement
+//         res.send(s.children[0].data)
+//       }
+//     }
+//     catch(err) {
+//       res.status(500).send(err.message)
+//     }
+//   }).catch((err) => {
+//     res.status(500).send(err.message)
+//   })
+// })
+//
+// app.get('/topNodeIdFromTitle/:title', async (req:express.Request, res:express.Response) => {
+//   console.log(req.params.title)
+//   try {
+//     const netflixUrl = await getTopNodeIdFromGoogleUsingTitle(req.params.title || "")
+//
+//     res.status(200).send(netflixUrl)
+//   }
+//   catch(err) {
+//     console.error(err)
+//     res.status(500).send(err.message)
+//   }
+// })
 
-      const scripts:cheerio.Cheerio = $('script[type="application/ld+json"]')
-      if(scripts.length === 0) {
-        throw new Error("No scripts found")
-      }
-      else {
-        if(scripts.length > 1) {
-          console.warn("There were multiple scripts that matched the query for", url)
-        }
-
-        const s = scripts[0] as cheerio.TagElement
-        res.send(s.children[0].data)
-      }
-    }
-    catch(err) {
-      res.status(500).send(err.message)
-    }
-  }).catch((err) => {
-    res.status(500).send(err.message)
-  })
-})
-
-app.get('/topNodeIdFromTitle/:title', async (req:express.Request, res:express.Response) => {
-  console.log(req.params.title)
-  try {
-    const netflixUrl = await getTopNodeIdFromGoogleUsingTitle(req.params.title || "")
-
-    res.status(200).send(netflixUrl)
-  }
-  catch(err) {
-    console.error(err)
-    res.status(500).send(err.message)
-  }
-})
-
-app.get('/tmdbSearchTv/:title', async (req:express.Request, res:express.Response) => {
-  console.log('tmdbSearchTv',req.params.title)
-  axios.get(`https://api.themoviedb.org/3/search/tv?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(req.params.title)}`).then(tmdbResponse => {
-    res.status(tmdbResponse.status).send(tmdbResponse.data)
-  }).catch((err) => {
-    res.status(500).send(err.message)
-  })
-})
-
-app.get('/tmdbTvDetails/:titleId', async (req:express.Request, res:express.Response) => {
-  console.log('tmdbTvDetails',req.params.titleId)
-  axios.get(`https://api.themoviedb.org/3/tv/${req.params.titleId}?api_key=${TMDB_API_KEY}`).then(tmdbResponse => {
-    res.status(tmdbResponse.status).send(tmdbResponse.data)
-  }).catch((err) => {
-    res.status(500).send(err.message)
-  })
-})
+// app.get('/tmdbSearchTv/:title', async (req:express.Request, res:express.Response) => {
+//   console.log('tmdbSearchTv',req.params.title)
+//   axios.get(`https://api.themoviedb.org/3/search/tv?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(req.params.title)}`).then(tmdbResponse => {
+//     res.status(tmdbResponse.status).send(tmdbResponse.data)
+//   }).catch((err) => {
+//     res.status(500).send(err.message)
+//   })
+// })
+//
+// app.get('/tmdbTvDetails/:titleId', async (req:express.Request, res:express.Response) => {
+//   console.log('tmdbTvDetails',req.params.titleId)
+//   axios.get(`https://api.themoviedb.org/3/tv/${req.params.titleId}?api_key=${TMDB_API_KEY}`).then(tmdbResponse => {
+//     res.status(tmdbResponse.status).send(tmdbResponse.data)
+//   }).catch((err) => {
+//     res.status(500).send(err.message)
+//   })
+// })
 
 
 export type ConsolidatedTmdbTvType = {
@@ -148,6 +148,15 @@ app.post('/postBatchTvDetails', async (req:express.Request, res:express.Response
 
   console.log("data",data)
   res.status(200).send(data)
+})
+
+app.get("/tmdbImg/:path", async (req:express.Request, res:express.Response) => {
+  const path:string = req.params.path
+  const url = 'https://image.tmdb.org/t/p/original/' + path
+  console.log("Requesting image", url)
+  axios({ method: 'get', responseType: 'stream', url }).then(
+    response => response.data.pipe(res)
+  ).catch(err => res.status(500).send(err.message))
 })
 
 

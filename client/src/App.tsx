@@ -5,7 +5,7 @@ import Landing from 'Components/Landing/Landing'
 import PosterTopX, { PosterTopXRequiredProps } from 'Components/PosterTopX/PosterTopX'
 import { SERVER_URL, TOP_X, YEAR } from "consts"
 import parseCsvData, { CsvDataType } from "utils/parseCsvData"
-import processCsvData, { ConsolidatedTmdbTvType, YearDataMapType } from "utils/processCsvData"
+import processCsvData, { YearDataMapType } from "utils/processCsvData"
 import './App.scss'
 
 export type TVSeriesType = {
