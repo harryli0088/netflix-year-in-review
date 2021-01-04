@@ -62,7 +62,7 @@ class App extends React.Component<{},State> {
   }
 
 
-  fetchCsv() {
+  fetchCsv() { //use for development
     fetch('/example.csv').then((response) => {
       if(response && response.body) {
         const reader = response.body.getReader()

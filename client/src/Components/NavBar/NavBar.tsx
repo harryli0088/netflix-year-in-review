@@ -34,7 +34,7 @@ export default function NavBar(props: Props) {
             <div className="navIcon">
               <FontAwesomeIcon icon={faInfoCircle}/>
             </div>
-            <div>Design &</div>
+            <div>Our Design &</div>
             <div>Development</div>
           </div>
         </div>

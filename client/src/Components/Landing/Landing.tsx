@@ -58,7 +58,7 @@ export default class Landing extends React.Component<Props,State> {
           <div id="landingContent">
             <section style={{paddingLeft:"1em", paddingRight:"1em"}}>
               <p><b>By Matthew Lau & Harry Li</b></p>
-              <p id="description">Inspired by  #SpotifyWrapped that subscribers get at the end of every  year, we wanted to create something similar for Netflix. We are using the .csv viewing activity log from Netflix’s site with the help of “The Movie Database API”  As of January 1, 2020, we have created our first graphic in this project that shows your <b>Top 5 Shows of 2020</b>. Check it out!</p>
+              <p id="description">Inspired by #SpotifyWrapped that subscribers get at the end of every year, we created something similar for Netflix. We are using the .csv viewing activity log from Netflix’s site with the help of “The Movie Database API”. We have created our first graphics in this project that shows your <b>Top 5 Shows of 2020</b> and <b>Overview</b>. Check it out!</p>
             </section>
 
             <section>

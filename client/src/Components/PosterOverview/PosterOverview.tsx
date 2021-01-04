@@ -30,13 +30,20 @@ export default class PosterTopX extends React.Component<Props,State> {
       if(yearData) {
         data.movieCount = yearData.movie.size + 10
         yearData.movie.forEach((nameData) => {
-          console.log("nameData",nameData)
-          data.duration += nameData.tmdbData.runtime
+          let count = 0
+          nameData.titles.forEach((titleCount) => {
+            count += titleCount
+          })
+          data.duration += count* nameData.tmdbData.runtime
         })
 
         data.serieCount = yearData.serie.size
         yearData.serie.forEach((nameData) => {
-          data.duration += nameData.tmdbData.processedDuration
+          let count = 0
+          nameData.titles.forEach((titleCount) => {
+            count += titleCount
+          })
+          data.duration += count* nameData.tmdbData.processedDuration
         })
       }
 
