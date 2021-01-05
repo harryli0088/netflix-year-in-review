@@ -1,4 +1,5 @@
 import React from 'react'
+import BrowserModal from 'Components/BrowserModal/BrowserModal'
 import CustomModal from 'Components/CustomModal/CustomModal'
 import Landing from 'Components/Landing/Landing'
 import NavBar from 'Components/NavBar/NavBar'
@@ -121,6 +122,8 @@ class App extends React.Component<{},State> {
   render() {
     return (
       <div className="App">
+        <BrowserModal/>
+        
         <CustomModal
           close={() => this.setStatus("",false)}
           content={this.state.status}
