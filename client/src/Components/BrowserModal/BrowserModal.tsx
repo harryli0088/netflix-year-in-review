@@ -9,6 +9,7 @@ export default function BrowserModal() {
     const browser = detect()
 
     if( //if this is firefox on android
+      true ||
       browser?.name?.toLowerCase().indexOf("firefox") !== -1
       && browser?.os?.toLowerCase().indexOf("android") !== -1
     ) {
@@ -19,7 +20,7 @@ export default function BrowserModal() {
             <div style={{padding: "1em"}}>
               <div>Firefox on Android doesn't reliably load images.</div>
               <br/>
-              <div>For best results, we recommend using another browser or platform!</div>
+              <div>For best results, we recommend using another platform or another browser (such as Chrome)!</div>
               <br/>
               <div><button onClick={e => setShowModal(false)}>Got it</button></div>
             </div>
