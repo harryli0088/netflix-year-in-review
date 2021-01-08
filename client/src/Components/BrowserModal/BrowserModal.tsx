@@ -9,7 +9,6 @@ export default function BrowserModal() {
     const browser = detect()
 
     if( //if this is firefox on android
-      true ||
       browser?.name?.toLowerCase().indexOf("firefox") !== -1
       && browser?.os?.toLowerCase().indexOf("android") !== -1
     ) {
