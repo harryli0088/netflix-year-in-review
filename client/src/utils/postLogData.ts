@@ -1,14 +1,23 @@
 import { SERVER_URL } from "consts"
 import { YearDataMapType } from "utils/processCsvData"
+import hasExtension from "utils/hasExtension"
 import processPosterOverviewData from "utils/processPosterOverviewData"
-import processPosterTopXData from "utils/processPosterTopXData"
+import { processPosterTopData } from "utils/processPosterTopXData"
 
 
 export default function postLogData(yearDataMap:YearDataMapType) {
   const overviewData = processPosterOverviewData(yearDataMap)
-  const topXData = processPosterTopXData(yearDataMap)
+  const tmpTopData = processPosterTopData(yearDataMap)
+  const topData:{hasImgSrcs: boolean[], scores: number[], titles: string[]} = {
+    hasImgSrcs: tmpTopData.imgSrcs.map(str => hasExtension(str, ".jpg")),
+    scores: tmpTopData.scores,
+    titles: tmpTopData.titles,
+  }
 
-  console.log(overviewData, topXData)
+  console.log({
+    overviewData,
+    topData,
+  })
 
   fetch(`${SERVER_URL}/postLogData`, {
     method: 'POST', // *GET, POST, PUT, DELETE, etc.
@@ -22,7 +31,13 @@ export default function postLogData(yearDataMap:YearDataMapType) {
     referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
     body: JSON.stringify({
       overviewData,
-      topXData,
+      topData,
     })
-  }).then(response => response.text()).then(text => console.log(text)).catch(err => console.error(err))
+  }).then(
+    response => response.text()
+  ).then(
+    text => console.log(text)
+  ).catch(
+    err => console.error(err)
+  )
 }

@@ -217,11 +217,33 @@ const POST_LOG_DATA_SCHEMA = {
   "id": "/postLogData",
   "type": "object",
   "properties": {
-    "serie": {
-      "type": "array",
-      "items": {"type": "string"},
+    "overviewData": {
+      "type": "object",
+      "properties": {
+        "duration": { "type": "number" },
+        "movieCount": { "type": "number" },
+        "serieCount": { "type": "number" },
+      },
     },
-  }
+    "topData": {
+      "type": "object",
+      "properties": {
+        "hasImgSrcs": {
+          "type": "array",
+          "items": {"type": "boolean"},
+        },
+        "titles": {
+          "type": "array",
+          "items": {"type": "string"},
+        },
+        "scores": {
+          "type": "array",
+          "items": {"type": "number"},
+        },
+      },
+    },
+  },
+  "required": true,
 }
 app.post('/postLogData', async (req:express.Request, res:express.Response) => {
   console.log("postLogData")
