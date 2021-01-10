@@ -1,9 +1,9 @@
 import React from 'react'
 import memoize from 'memoize-one'
 import ImgFromCanvas from 'Components/ImgFromCanvas/ImgFromCanvas'
-import { TOP_X, YEAR } from "consts"
 import drawImage from "utils/drawImage"
 import multilineFillText from "utils/multilineFillText"
+import processPosterTopXData from "utils/processPosterTopXData"
 import { YearDataMapType } from "utils/processCsvData"
 // import shareApi from "utils/shareApi"
 import backgroundImageSrc from "./top5.jpg"
@@ -44,34 +44,8 @@ export default class PosterTopX extends React.Component<Props,State> {
     this.forceUpdate()
   }
 
-  processData = memoize(
-    (yearDataMap: YearDataMapType):{imgSrcs: string[], titles: string[]} => {
-      const data = yearDataMap.get(YEAR)
-      if(data) {
-        const serieData = Array.from(data.serie).sort(
-          (a, b) => {
-            if(a[1].score > b[1].score) return -1
-            return 1
-          }
-        )
-        console.log("serieData",serieData)
-
-        const topXSeriesData = serieData.slice(0, TOP_X)
-
-        return {
-          imgSrcs: topXSeriesData.map(
-            (d,i) => i===0 ? d[1].tmdbData.backdrop_path : d[1].tmdbData.poster_path
-          ),
-          titles: topXSeriesData.map(d => d[0]),
-        }
-      }
-
-      return {imgSrcs: [], titles: []}
-    }
-  )
-
   canvasDrawCallback = (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
-    const { imgSrcs, titles } = this.processData(this.props.yearDataMap)
+    const { imgSrcs, titles } = processPosterTopXData(this.props.yearDataMap)
 
     const imgs = this.getImages(imgSrcs)
 

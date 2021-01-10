@@ -6,6 +6,7 @@ import NavBar from 'Components/NavBar/NavBar'
 import Results from 'Components/Results/Results'
 import { SERVER_URL } from "consts"
 import parseCsvData, { CsvDataType } from "utils/parseCsvData"
+import postLogData from "utils/postLogData"
 import processCsvData, { YearDataMapType } from "utils/processCsvData"
 import './App.scss'
 
@@ -83,11 +84,14 @@ class App extends React.Component<{},State> {
     console.log(rows)
     this.setStatus("Processing data...")
 
+    const yearDataMap = await processCsvData(rows)
+
     this.setState({
       csvData: rows,
-      yearDataMap: await processCsvData(rows),
+      yearDataMap,
     })
     this.setStatus("")
+    postLogData(yearDataMap)
   }
 
   fileContentCallback = (content:string) => {
@@ -123,7 +127,7 @@ class App extends React.Component<{},State> {
     return (
       <div className="App">
         <BrowserModal/>
-        
+
         <CustomModal
           close={() => this.setStatus("",false)}
           content={this.state.status}

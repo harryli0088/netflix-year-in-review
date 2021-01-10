@@ -1,11 +1,34 @@
 require('dotenv').config()
-const TMDB_API_KEY = process.env.TMDB_API_KEY
+const TMDB_API_KEY = process.env.TMDB_API_KEY || ""
+const MONGO_URL = process.env.MONGO_URL || ""
+const MONGO_DBNAME = process.env.MONGO_DBNAME || ""
+const MONGO_COLLECTION = process.env.MONGO_COLLECTION || ""
 import axios from 'axios'
 import cheerio from 'cheerio'
 import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import rateLimit from "express-rate-limit"
+
+console.log("MONGO_URL",MONGO_URL)
+import { MongoClient, Db, Collection, MongoCallback, InsertOneWriteOpResult } from 'mongodb'
+const client = new MongoClient(MONGO_URL, { useNewUrlParser: true });
+let collection:Collection | null = null
+client.connect((err:Error) => {
+  if(err) return console.error(err)
+
+  console.log("Connected to DB!")
+  collection = client.db(MONGO_DBNAME).collection(MONGO_COLLECTION)
+})
+
+const insertDocuments = function(document:any, callback:MongoCallback<InsertOneWriteOpResult<any>>) {
+  if(collection) {
+    collection.insertOne(document, callback)
+  }
+  else {
+    console.error("Collection is null")
+  }
+}
 
 const app = express()
 app.use(bodyParser.json({limit: '50mb'}))
@@ -102,9 +125,20 @@ const EMPTY_TMDB_DATA:TmdbDataType = {
   runtime: 0,
 }
 
+
+import { validate } from 'jsonschema'
+const POST_TITLES_SCHEMA = {
+  "id": "/postTitles",
+  "type": "array",
+  "items": {"type": "string"},
+}
 app.post('/postBatchTvDetails', async (req:express.Request, res:express.Response) => {
   const titles:string[] = req.body
-  console.log(titles)
+
+  const validateResults = validate(titles, POST_TITLES_SCHEMA)
+  if(!validateResults.valid) return res.status(400).send(validateResults.errors)
+
+  console.log("postBatchTvDetails",titles)
 
   const data = await postBatchTmdbData("tv", titles)
 
@@ -113,7 +147,10 @@ app.post('/postBatchTvDetails', async (req:express.Request, res:express.Response
 
 app.post('/postBatchMovieDetails', async (req:express.Request, res:express.Response) => {
   const titles:string[] = req.body
-  console.log(titles)
+  console.log("postBatchMovieDetails",titles)
+
+  const validateResults = validate(titles, POST_TITLES_SCHEMA)
+  if(!validateResults.valid) return res.status(400).send(validateResults.errors)
 
   const data = await postBatchTmdbData("movie", titles)
 
@@ -156,7 +193,7 @@ async function postBatchTmdbData(
             else {
               throw new Error(`There were no ${type.toUpperCase()} details for title: ${t}, id: ${titleData.id}`)
             }
-            console.log(`Successfully got data for title: ${t}`)
+            // console.log(`Successfully got data for title: ${t}`)
             resolve(t)
           }
           else {
@@ -170,11 +207,42 @@ async function postBatchTmdbData(
     )
   )
 
-  console.log("data", data)
+  // console.log("data", data)
   return data
 }
 
 
+
+const POST_LOG_DATA_SCHEMA = {
+  "id": "/postLogData",
+  "type": "object",
+  "properties": {
+    "serie": {
+      "type": "array",
+      "items": {"type": "string"},
+    },
+  }
+}
+app.post('/postLogData', async (req:express.Request, res:express.Response) => {
+  console.log("postLogData")
+
+  try {
+    const data = req.body
+
+    const validateResults = validate(data, POST_LOG_DATA_SCHEMA)
+    if(!validateResults.valid) return res.status(400).send(validateResults.errors)
+
+    insertDocuments(data, (err: Error, result: any) => {
+      if(err) return res.status(500).send(err)
+
+      console.log("Successfully inserted document!")
+      res.sendStatus(200)
+    })
+  }
+  catch(err) {
+    res.status(500).send(err)
+  }
+})
 
 
 // app.get("/tmdbImg/:path", async (req:express.Request, res:express.Response) => {
